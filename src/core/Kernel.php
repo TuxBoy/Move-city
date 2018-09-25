@@ -1,5 +1,5 @@
 <?php
-namespace App;
+namespace Core;
 
 use Exception;
 use Psr\Container\ContainerInterface;

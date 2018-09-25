@@ -1,7 +1,7 @@
 <?php
 namespace App\Controller;
 
-use App\PhpRenderer;
+use Core\PhpRenderer;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**

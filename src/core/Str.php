@@ -1,11 +1,17 @@
 <?php
-namespace App;
+namespace Core;
 
+/**
+ * Class Str
+ *
+ * @package Core
+ */
 abstract class Str
 {
 
     /**
      * Get left part of the string from the separator
+     *
      * @param string $string
      * @param string $separator
      * @return string

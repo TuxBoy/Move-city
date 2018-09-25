@@ -8,12 +8,11 @@ define('DOT',      '.');
 require APP_ROOT . '/vendor/autoload.php';
 
 use Symfony\Component\Debug\Debug;
-use function Http\Response\send;
 
 Debug::enable();
 
-$container = new \App\Container\DIC;
-$kernel    = new \App\Kernel($container);
+$container = new \Core\Container\DIC;
+$kernel    = new \Core\Kernel($container);
 $response  = $kernel->handler(\Symfony\Component\HttpFoundation\Request::createFromGlobals());
 
 $response->send();

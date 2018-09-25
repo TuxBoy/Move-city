@@ -12,7 +12,8 @@ use function Http\Response\send;
 
 Debug::enable();
 
-$kernel   = new \App\Kernel();
-$response = $kernel->handler(\GuzzleHttp\Psr7\ServerRequest::fromGlobals());
+$container = new \App\Container\DIC;
+$kernel    = new \App\Kernel($container);
+$response  = $kernel->handler(\GuzzleHttp\Psr7\ServerRequest::fromGlobals());
 
 send($response);

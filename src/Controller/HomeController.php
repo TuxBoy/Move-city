@@ -1,7 +1,8 @@
 <?php
 namespace App\Controller;
 
-use GuzzleHttp\Psr7\Response;
+use App\PhpRenderer;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
  * Class HomeController
@@ -10,9 +11,19 @@ use GuzzleHttp\Psr7\Response;
 class HomeController
 {
 
+	/**
+	 * @var PhpRenderer
+	 */
+	private $view;
+
+	public function __construct(PhpRenderer $view)
+	{
+		$this->view = $view;
+	}
+
 	public function index()
 	{
-  	return new Response(200, [], 'Hello');
+  	return new JsonResponse(['slug' => 'test']);
   }
 
 }

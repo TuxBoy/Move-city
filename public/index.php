@@ -14,6 +14,6 @@ Debug::enable();
 
 $container = new \App\Container\DIC;
 $kernel    = new \App\Kernel($container);
-$response  = $kernel->handler(\GuzzleHttp\Psr7\ServerRequest::fromGlobals());
+$response  = $kernel->handler(\Symfony\Component\HttpFoundation\Request::createFromGlobals());
 
-send($response);
+$response->send();

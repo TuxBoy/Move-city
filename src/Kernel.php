@@ -2,10 +2,9 @@
 namespace App;
 
 use Exception;
-use GuzzleHttp\Psr7\Response;
 use Psr\Container\ContainerInterface;
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Class Kernel
@@ -31,13 +30,13 @@ class Kernel
 	public static $controller_path = 'App\\Controller\\';
 
 	/**
-	 * @param $request ServerRequestInterface
-	 * @return ResponseInterface
+	 * @param $request Request
+	 * @return Response
 	 * @throws Exception
 	 */
-	public function handler(ServerRequestInterface $request): ResponseInterface
+	public function handler(Request $request): Response
 	{
-		$clear_request   = trim($request->getUri()->getPath(), '/') ?? '/';
+		$clear_request   = trim($request->getPathInfo(), '/') ?? '/';
 		$parts_request   = explode('/', $clear_request);
 		$controller_name = $parts_request[0];
 		$controller      = static::$controller_path . ucfirst($controller_name) . 'Controller';
@@ -51,16 +50,16 @@ class Kernel
 		else {
 			$action = count($parts_request) > 1 ? $parts_request[1] : 'index';
 			if (!method_exists($controller, $action)) {
-				$response = new Response(404, [], '<h1>Page introuvable</h1>');
+				$response = new Response('<h1>Page introuvable</h1>', 404);
 			}
 			else {
-				$args     = $request->getQueryParams() ?? [];
+				$args     = $request->query->all() ?? [];
 				$response = $controller_instantiable->$action($request, $args);
 			}
 		}
 
 		if (is_string($response)) {
-			$response = new Response(200, [], $response);
+			$response = new Response($response);
 		}
 
 		return $response;

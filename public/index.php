@@ -11,8 +11,14 @@ use Symfony\Component\Debug\Debug;
 
 Debug::enable();
 
-$container = new \Core\Container\DIC;
+$request = \Symfony\Component\HttpFoundation\Request::createFromGlobals();
+$response = new \Symfony\Component\HttpFoundation\Response();
+
+$container = new \Core\Container\DIC($request, $response);
 $kernel    = new \Core\Kernel($container);
-$response  = $kernel->handler(\Symfony\Component\HttpFoundation\Request::createFromGlobals());
+
+$dispatcher = new \Core\Dispatcher;
+$dispatcher->addMiddleware([$kernel, 'handler']);
+$response = $dispatcher->process($request, $response);
 
 $response->send();

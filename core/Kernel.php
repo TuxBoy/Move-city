@@ -36,10 +36,11 @@ class Kernel
 
 	/**
 	 * @param          $request Request
+	 * @param Response $response
 	 * @return Response
 	 * @throws Exception
 	 */
-	public function handler(Request $request): Response
+	public function handler(Request $request, Response $response): Response
 	{
 		$clear_request   = trim($request->getPathInfo(), '/') ?? '/';
 		$parts_request   = explode('/', $clear_request);

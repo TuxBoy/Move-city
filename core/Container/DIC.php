@@ -7,6 +7,7 @@ use ReflectionClass;
 use ReflectionException;
 use ReflectionMethod;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Class DIC
@@ -30,6 +31,28 @@ class DIC implements ContainerInterface
 	 * @var array
 	 */
 	private $factories = [];
+
+	/**
+	 * @var Response
+	 */
+	private $response;
+
+	/**
+	 * @var Request
+	 */
+	private $request;
+
+	/**
+	 * DIC constructor
+	 *
+	 * @param Request  $request
+	 * @param Response $response
+	 */
+	public function __construct(Request $request, Response $response)
+	{
+		$this->response = $response;
+		$this->request  = $request;
+	}
 
 	/**
 	 * Finds an entry of the container by its identifier and returns it.
@@ -122,7 +145,10 @@ class DIC implements ContainerInterface
 		foreach ($parameters as $parameter) {
 			if ($parameter_class = $parameter->getClass()) {
 				if ($parameter_class->getName() === Request::class) {
-					$resolve_parameters[] = Request::createFromGlobals();
+					$resolve_parameters[] = $this->request;
+				}
+				elseif ($parameter_class->getName() === Response::class) {
+					$resolve_parameters[] = $this->response;
 				}
 				else {
 					$resolve_parameters[] = $this->get($parameter_class->getName());

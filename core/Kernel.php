@@ -1,7 +1,6 @@
 <?php
 namespace Core;
 
-use App\Controller\HomeController;
 use Exception;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;

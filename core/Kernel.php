@@ -47,8 +47,13 @@ class Kernel
     if ($clear_request[-1] === '/') {
         $clear_request = substr($clear_request, 0, -1);
     }
-		$parts_request   = explode('/', $clear_request);
-		$controller_name = !empty($parts_request[0]) ? $parts_request[0] : 'home';
+      if (!empty($clear_request)) {
+          $parts_request   = explode('/', trim($clear_request, '/'));
+          $controller_name = $parts_request[0];
+    }
+    else {
+        $controller_name = 'home';
+    }
 		$controller      = static::$controller_path . ucfirst($controller_name) . 'Controller';
 		if (!class_exists($controller)) {
 				throw new Exception("The controller $controller does not exist");

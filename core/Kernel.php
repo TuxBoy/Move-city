@@ -1,6 +1,7 @@
 <?php
 namespace Core;
 
+use App\Controller\HomeController;
 use Exception;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -42,9 +43,12 @@ class Kernel
 	 */
 	public function handler(Request $request, Response $response): Response
 	{
-		$clear_request   = trim($request->getPathInfo(), '/') ?? '/';
+    $clear_request   = $request->getPathInfo();
+    if ($clear_request[-1] === '/') {
+        $clear_request = substr($clear_request, 0, -1);
+    }
 		$parts_request   = explode('/', $clear_request);
-		$controller_name = $parts_request[0];
+		$controller_name = !empty($parts_request[0]) ? $parts_request[0] : 'home';
 		$controller      = static::$controller_path . ucfirst($controller_name) . 'Controller';
 		if (!class_exists($controller)) {
 				throw new Exception("The controller $controller does not exist");

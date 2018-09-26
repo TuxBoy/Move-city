@@ -6,7 +6,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
  * Class HomeController
- * @package App\Controller
+ *
  */
 class HomeController
 {

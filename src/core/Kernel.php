@@ -15,19 +15,24 @@ class Kernel
 {
 
 	/**
+	 * @var string
+	 */
+	public static $controller_path = 'App\\Controller\\';
+
+	/**
 	 * @var ContainerInterface
 	 */
 	private $container;
 
+	/**
+	 * Kernel constructor
+	 *
+	 * @param ContainerInterface $container
+	 */
 	public function __construct(ContainerInterface $container)
 	{
 		$this->container = $container;
 	}
-
-	/**
-	 * @var string
-	 */
-	public static $controller_path = 'App\\Controller\\';
 
 	/**
 	 * @param $request Request

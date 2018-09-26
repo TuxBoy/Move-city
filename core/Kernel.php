@@ -58,7 +58,7 @@ class Kernel
 				$response = new Response('<h1>Page introuvable</h1>', 404);
 			}
 			else {
-				$parameters = $this->container->parameterResolver(get_class($controller_instantiable), $action, $response);
+				$parameters = $this->container->parameterResolver(get_class($controller_instantiable), $action);
 				$response = call_user_func_array([$controller_instantiable, $action], $parameters);
 			}
 		}

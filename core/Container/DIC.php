@@ -2,11 +2,11 @@
 namespace Core\Container;
 
 use Exception;
-use GuzzleHttp\Psr7\ServerRequest;
 use Psr\Container\ContainerInterface;
-use Psr\Http\Message\ServerRequestInterface;
 use ReflectionClass;
 use ReflectionException;
+use ReflectionMethod;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Class DIC
@@ -99,22 +99,7 @@ class DIC implements ContainerInterface
 		$reflected_class = new ReflectionClass($id);
 		if ($reflected_class->isInstantiable()) {
 			if ($constructor = $reflected_class->getConstructor()) {
-				$parameters = $constructor->getParameters();
-				$constructor_parameters = [];
-				foreach ($parameters as $parameter) {
-					if ($parameter_class = $parameter->getClass()) {
-						if ($parameter_class->getName() === ServerRequestInterface::class) {
-							$constructor_parameters[] = ServerRequest::fromGlobals();
-						}
-						else {
-							$constructor_parameters[] = $this->get($parameter_class->getName());
-						}
-					}
-					else {
-						$constructor_parameters[] = $parameter->getDefaultValue();
-					}
-				}
-				return $reflected_class->newInstanceArgs($constructor_parameters);
+				return $reflected_class->newInstanceArgs($this->getParameters($constructor));
 			}
 			else {
 				return $reflected_class->newInstance();
@@ -123,6 +108,47 @@ class DIC implements ContainerInterface
 		else {
 			throw new Exception($id . ' is not an instantiable class');
 		}
+	}
+
+	/**
+	 * @param ReflectionMethod $reflectionMethod
+	 * @return array
+	 * @throws ReflectionException
+	 */
+	private function getParameters(ReflectionMethod $reflectionMethod): array
+	{
+		$parameters         = $reflectionMethod->getParameters();
+		$resolve_parameters = [];
+		foreach ($parameters as $parameter) {
+			if ($parameter_class = $parameter->getClass()) {
+				if ($parameter_class->getName() === Request::class) {
+					$resolve_parameters[] = Request::createFromGlobals();
+				}
+				else {
+					$resolve_parameters[] = $this->get($parameter_class->getName());
+				}
+			}
+			else {
+				$resolve_parameters[] = $parameter->getDefaultValue();
+			}
+		}
+		return $resolve_parameters;
+	}
+
+	/**
+	 * @param $class_name  string
+	 * @param $method_name string
+	 * @return array
+	 * @throws Exception
+	 */
+	public function parameterResolver(string $class_name, string $method_name): array
+	{
+		$class = new ReflectionClass($class_name);
+		if (!$method_name || !$class->hasMethod($method_name)) {
+			throw new Exception($method_name . ' does not exist in the ' . $class_name . ' Class');
+		}
+		$class_method = $class->getMethod($method_name);
+		return $this->getParameters($class_method);
 	}
 
 }

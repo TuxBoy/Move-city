@@ -35,7 +35,7 @@ class Kernel
 	}
 
 	/**
-	 * @param $request Request
+	 * @param          $request Request
 	 * @return Response
 	 * @throws Exception
 	 */
@@ -58,8 +58,8 @@ class Kernel
 				$response = new Response('<h1>Page introuvable</h1>', 404);
 			}
 			else {
-				$args     = $request->query->all() ?? [];
-				$response = $controller_instantiable->$action($request, $args);
+				$parameters = $this->container->parameterResolver(get_class($controller_instantiable), $action, $response);
+				$response = call_user_func_array([$controller_instantiable, $action], $parameters);
 			}
 		}
 

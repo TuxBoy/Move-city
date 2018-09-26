@@ -1,6 +1,7 @@
 <?php
 namespace App\Controller;
 
+use App\Table\ShopTable;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
@@ -10,9 +11,9 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 class HomeController
 {
 
-	public function index()
+	public function index(ShopTable $shopTable)
 	{
-  	return new JsonResponse(['slug' => 'test']);
+  	return new JsonResponse($shopTable->getAll());
   }
 
 }

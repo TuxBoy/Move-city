@@ -18,7 +18,7 @@ $ composer install
 * Lancer le serveur interne de PHP :
 
 ```bash
-$ php -S localhost:8080 -t public/ -ddisplay_errors=1
+$ composer start
 ```
 
 * Se rendre sur http://localhost:8080

@@ -3,6 +3,7 @@ namespace App\Table;
 
 use App\Entity\Shop;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Driver\Statement;
 use Doctrine\DBAL\FetchMode;
 
 /**
@@ -42,9 +43,9 @@ class ShopTable
 
 	/**
 	 * @param array $data
-	 * @return \Doctrine\DBAL\Driver\Statement|int
+	 * @return Statement|int
 	 */
-	public function save(array $data = [])
+	public function save(array $data = []): int
 	{
 		$values         = array_filter($data); // Clear null data
 		$prepare_values = [];

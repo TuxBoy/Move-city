@@ -4,6 +4,7 @@ namespace App\Controller;
 use App\Table\ShopTable;
 use Core\PhpRenderer;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -32,6 +33,7 @@ class ShopController
 	{
 		if ($request->getMethod() === 'POST') {
 			$shopTable->save($request->request->all());
+			return new RedirectResponse('/');
 		}
 		return $renderer->render('shop.create');
 	}

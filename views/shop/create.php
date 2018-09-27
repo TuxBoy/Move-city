@@ -2,7 +2,7 @@
 
 	<div class="container">
 		<h1>Ajouter un commerce</h1>
-		<form action="">
+		<form action="/shop/create" method="post">
 			<div class="panel panel-default">
 				<div class="panel-heading">
 					Informations :

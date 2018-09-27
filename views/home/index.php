@@ -1,56 +1,16 @@
 <?= $renderer->render('header') ?>
 
-<!-- 1e range entete ========================================
-        	================================================================= -->
-<div class="row" id="tete">
-	<div class="col-lg-6">
-		<p>Pour toute informations, nos équipes restent disponibles via la page contact</p>
-	</div>
-	<div class="col-lg-4 pull-right">
-		<a class="btn btn-default btn-circle" href="#"><i class="fa fa-twitter fa-1x"></i></a>
-		<a class="btn btn-default btn-circle" href="#"><i class="fa fa-facebook fa-1x"></i></a>
-		<a class="btn btn-default btn-circle" href="#"><i class="fa fa-google-plus fa-1x"></i></a>
-		<!--        <a class="btn btn-default btn-circle" href="#"><i class="fa fa-youtube fa-1x"></i></a> -->
+<!-- Ici, nous allons récupérer pour afficher la carte depuis une autre shop.
+  ================================================================= -->
 
+<!-- Le conteneur de notre carte (avec une contrainte CSS pour la taille -->
+<div id="macarte"></div>
 
-		<button type="button" class="btn btn-primary btn-xs buton">Français</button>
-		<!-- au besoin
-											<div class="btn-group">
-												<button type="button" class="btn btn-success btn-xs"><span class="glyphicon glyphicon-shopping-cart"></span></button>
-												<button type="button" class="btn btn-success btn-xs">0</button>
-											</div>
-
-											<div class="btn-group">
-												<button type="button" class="btn btn-primary btn-xs">36 resources</button>
-												<button type="button" class="btn btn-success btn-xs">ADD</button>
-											</div> -->
-	</div>
-</div>
-
-<!-- 2e range 2e navigation ========================================
-================================================================= -->
-<div class="row">
-	<div class="col-lg-3">
-		<h1>Move City </h1>
-	</div>
-	<div class="col-lg-9">
-		<ul>
-
-			<li><a href="#">Contact</a></li>
-			<li><a href="#">Catégories</a></li>
-			<!--	<li><a href="#">HOMEPAGE</a></li>
-				<li><a href="#">HOMEPAGE</a></li>
-				<li><a href="#">HOMEPAGE</a></li>
-				<li><a href="#">HOMEPAGE</a></li> -->
-			<li><a href="#">Accueil</a></li>
-		</ul>
-
-	</div>
-</div>
-
-<!-- Ici, nous allons récupérer pour afficher la carte depuis une autre page.========================================
-================================================================= -->
-
+<script>
+	Ajax.get('/shop/index').then((shops) => {
+		new Map(L).createMap(46.3630104, 2.9846608, 6, shops)
+	})
+</script>
 
 <!-- 3e range partie recherche ========================================
 ================================================================= -->
@@ -75,13 +35,13 @@
 <div class="row">
 	<div class="col-lg-9">
 		<div class="text-center">
-			<h1>Les principales catégories : </h1>
+			<h1>Les principales catégories :</h1>
 			<P>Depuis de nombreux mois nos équipes sont à pied d'oeuvre pour produire chaque catégorie du site mais, pour cela il nous a fallu innover.
 				<br> Vous trouverez en dessous les principales catégories.</P>
 		</div>
 
 		<!--range trouver a l'interieur du ranger article ========================================
-	================================================================= -->
+				================================================================= -->
 		<div class="row">
 			<div class="col-lg-4">
 				<div class="row">
@@ -164,7 +124,7 @@
 	</div>
 
 	<!-- le formulaire et recherche a gauche de l'ecran ========================================
-	================================================================= -->
+					================================================================= -->
 	<div class="col-lg-3 sidebar">
 		<div class="input-group" style="padding-top: 40px;">
 			<input type="text" class="form-control" placeholder="Rechercher...">
@@ -174,7 +134,7 @@
 		</div>
 
 		<!-- ici se trouvera l'espace membre qui est actuellement en production et énovation, il y a un gros travail à faire dessus puisqu'il faut relier de nombreuse chose, je pense qu'il y en a pour 8 mois de production à ce jour -> 6 mai 2018. ========================================
-				================================================================= -->
+		================================================================= -->
 
 		<div class="row" id="range1">
 			<div class="col-lg-1">
@@ -216,4 +176,5 @@
 		</div>
 	</div>
 </div>
+
 <?= $renderer->render('footer') ?>

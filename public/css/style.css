@@ -1,7 +1,7 @@
 
 .bar{
 
-	background-color: rgb(13, 13, 255);   
+	background-color: rgb(13, 13, 255);
 	padding: 28px;
 }
 
@@ -36,8 +36,8 @@ i{
 	padding-right: 40px;
 }
 
-#range2{     
-	padding-top: 20px; 
+#range2{
+	padding-top: 20px;
 	padding-right: 30px;
 	background-color: white;
 	margin-left: 15px;
@@ -60,6 +60,75 @@ i{
 
 .input-group{
 	padding: 5px;
+	position: relative;
+}
+
+/* les boutons des reseaux */
+.btn-circle {
+	width: 30px;
+	height: 30px;
+	text-align: center;
+	padding: 6px 0;
+	font-size: 12px;
+	line-height: 1.42;
+	border-radius: 15px;
+	background-color: rgb(220, 220, 220);
+}
+
+/* header */
+#tete{
+	background-color: rgb(241, 241, 241);
+	padding:4px 5px;
+}
+
+.pull-right{
+	background-color: rgb(241, 241, 241);
+}
+
+.btn-group, .buton{
+	padding-left: 10px;
+}
+
+/* nnavigation */
+
+ul{
+
+	list-style-type: none;
+	overflow: hidden;
+
+}
+
+li{
+	float: right;
+}
+
+
+
+li a{
+	display: block;
+	color: black;
+	text-align: center;
+	padding:14px 16px;
+	text-decoration: none;
+	padding-top: 35px;
+
+}
+
+
+li a:hover {
+	background-color: white;
+	text-decoration: none;
+}
+
+/* main gategories */
+.text-center{
+	padding-top: 40px;
+	padding-bottom: 25px;
+}
+
+#macarte {
+	width: 100%;
+	height:400px;
 	position: relative;
 }
 

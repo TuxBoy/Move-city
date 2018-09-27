@@ -8,80 +8,66 @@
 	<!-- Bootstrap CSS -->
 	<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css" rel="stylesheet">
 	<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
-	<link rel="stylesheet" type="text/css" href="/css/style.css">
+	<link rel="stylesheet" href="/css/style.css">
+
+	<!!-- carte -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/leaflet.css" />
+	<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/0.4.0/MarkerCluster.css" />
+	<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/0.4.0/MarkerCluster.Default.css" />
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/leaflet.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/0.4.0/leaflet.markercluster.js"></script>
+	<script type="application/javascript" src="/js/Ajax.js"></script>
+	<script type="application/javascript" src="/js/Map.js"></script>
 
 	<title>Move tity - trouvé le lieux qui vous intéresse !</title>
 </head>
-
-<style>
-
-	/* les boutons des reseaux */
-	.btn-circle {
-		width: 30px;
-		height: 30px;
-		text-align: center;
-		padding: 6px 0;
-		font-size: 12px;
-		line-height: 1.42;
-		border-radius: 15px;
-		background-color: rgb(220, 220, 220);
-	}
-
-	/* header */
-	#tete{
-		background-color: rgb(241, 241, 241);
-		padding:4px 5px;
-	}
-
-	.pull-right{
-		background-color: rgb(241, 241, 241);
-	}
-
-	.btn-group, .buton{
-		padding-left: 10px;
-	}
-
-	/* nnavigation */
-
-	ul{
-
-		list-style-type: none;
-		overflow: hidden;
-
-	}
-
-	li{
-		float: right;
-	}
-
-
-
-	li a{
-		display: block;
-		color: black;
-		text-align: center;
-		padding:14px 16px;
-		text-decoration: none;
-		padding-top: 35px;
-
-	}
-
-
-	li a:hover {
-		background-color: white;
-		text-decoration: none;
-	}
-
-	/* main gategories */
-	.text-center{
-		padding-top: 40px;
-		padding-bottom: 25px;
-	}
-
-
-</style>
-
-
 <body>
 
 <div class="container-fluid">
+	<!-- 1e range entete ========================================
+						================================================================= -->
+	<div class="row" id="tete">
+		<div class="col-lg-6">
+			<p>Pour toute informations, nos équipes restent disponibles via la page contact</p>
+		</div>
+		<div class="col-lg-4 pull-right">
+			<a class="btn btn-default btn-circle" href="#"><i class="fa fa-twitter fa-1x"></i></a>
+			<a class="btn btn-default btn-circle" href="#"><i class="fa fa-facebook fa-1x"></i></a>
+			<a class="btn btn-default btn-circle" href="#"><i class="fa fa-google-plus fa-1x"></i></a>
+			<!--        <a class="btn btn-default btn-circle" href="#"><i class="fa fa-youtube fa-1x"></i></a> -->
+
+
+			<button type="button" class="btn btn-primary btn-xs buton">Français</button>
+			<!-- au besoin
+												<div class="btn-group">
+													<button type="button" class="btn btn-success btn-xs"><span class="glyphicon glyphicon-shopping-cart"></span></button>
+													<button type="button" class="btn btn-success btn-xs">0</button>
+												</div>
+
+												<div class="btn-group">
+													<button type="button" class="btn btn-primary btn-xs">36 resources</button>
+													<button type="button" class="btn btn-success btn-xs">ADD</button>
+												</div> -->
+		</div>
+	</div>
+
+	<!-- 2e range 2e navigation ========================================
+	================================================================= -->
+	<div class="row">
+		<div class="col-lg-3">
+			<h1>Move City </h1>
+		</div>
+		<div class="col-lg-9">
+			<ul>
+
+				<li><a href="#">Contact</a></li>
+				<li><a href="#">Catégories</a></li>
+				<!--	<li><a href="#">HOMEPAGE</a></li>
+					<li><a href="#">HOMEPAGE</a></li>
+					<li><a href="#">HOMEPAGE</a></li>
+					<li><a href="#">HOMEPAGE</a></li> -->
+				<li><a href="#">Accueil</a></li>
+			</ul>
+
+		</div>
+	</div>

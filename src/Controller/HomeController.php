@@ -1,8 +1,8 @@
 <?php
 namespace App\Controller;
 
-use App\Table\ShopTable;
-use Symfony\Component\HttpFoundation\JsonResponse;
+use Core\PhpRenderer;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Class HomeController
@@ -11,9 +11,14 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 class HomeController
 {
 
-	public function index(ShopTable $shopTable)
+	/**
+	 * @param PhpRenderer $renderer
+	 * @return string
+	 * @throws \Exception
+	 */
+	public function index(PhpRenderer $renderer): string
 	{
-  	return new JsonResponse($shopTable->getAll());
+		return $renderer->render('home.index');
   }
 
 }

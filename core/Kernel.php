@@ -14,6 +14,8 @@ use Symfony\Component\HttpFoundation\Response;
 class Kernel
 {
 
+	const INDEX_ACTION = 'index';
+
 	/**
 	 * @var string
 	 */
@@ -46,14 +48,16 @@ class Kernel
     if ($clear_request[-1] === '/') {
         $clear_request = substr($clear_request, 0, -1);
     }
-      if (!empty($clear_request)) {
-          $parts_request   = explode('/', trim($clear_request, '/'));
-          $controller_name = $parts_request[0];
-    }
+		if (!empty($clear_request)) {
+				$parts_request   = explode('/', trim($clear_request, '/'));
+				$controller_name = $parts_request[0];
+				$action          = count($parts_request) > 1 ? $parts_request[1] : self::INDEX_ACTION;
+		}
     else {
         $controller_name = 'home';
+        $action          = self::INDEX_ACTION;
     }
-		$controller      = static::$controller_path . ucfirst($controller_name) . 'Controller';
+		$controller = static::$controller_path . ucfirst($controller_name) . 'Controller';
 		if (!class_exists($controller)) {
 				throw new Exception("The controller $controller does not exist");
 		}
@@ -62,7 +66,6 @@ class Kernel
 			$response = call_user_func_array($controller_instantiable, [$request]);
 		}
 		else {
-			$action = count($parts_request) > 1 ? $parts_request[1] : 'index';
 			if (!method_exists($controller, $action)) {
 				$response = new Response('<h1>Page introuvable</h1>', 404);
 			}

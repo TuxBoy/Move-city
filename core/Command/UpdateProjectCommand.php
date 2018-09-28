@@ -31,9 +31,7 @@ class UpdateProjectCommand extends Command
 	protected function execute(InputInterface $input, OutputInterface $output)
 	{
 		chdir($this->getAppRoot());
-		$git_result = shell_exec('git pull');
-
-		if ($git_result) {
+		if ($git_result = shell_exec('git pull')) {
 			$output->write($git_result);
 			$dependencies = $this->getDependenciesNotInstalled();
 			if (!empty($dependencies)) {

@@ -5,6 +5,9 @@ require dirname(__DIR__) . '/vendor/autoload.php';
 
 $application = new \Symfony\Component\Console\Application;
 
-$application->add(new \Core\Command\UpdateProjectCommand);
+$application->addCommands([
+	new \Core\Command\UpdateProjectCommand,
+	new \Core\Command\RunCommand,
+]);
 
 $application->run();

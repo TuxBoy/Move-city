@@ -1,21 +1,12 @@
 <?php
 namespace Core\Command;
 
-use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class UpdateProjectCommand extends Command
+class UpdateProjectCommand extends BaseCommand
 {
-
-	/**
-	 * @return string
-	 */
-	public function getAppRoot(): string
-	{
-		return dirname(dirname(__DIR__));
-	}
 
 	protected function configure()
 	{

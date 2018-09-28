@@ -3,6 +3,7 @@ namespace Core\Command;
 
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class UpdateProjectCommand extends Command
@@ -20,7 +21,8 @@ class UpdateProjectCommand extends Command
 	{
 		$this
 			->setName('app:update-project')
-			->setDescription('Update git project and composer dependencies');
+			->setDescription('Update git project and composer dependencies')
+			->addOption('force', 'f', InputOption::VALUE_NONE, 'Force the composer update');
 	}
 
 	/**
@@ -30,11 +32,12 @@ class UpdateProjectCommand extends Command
 	 */
 	protected function execute(InputInterface $input, OutputInterface $output)
 	{
+		$force_update = $input->getOption('force');
 		chdir($this->getAppRoot());
 		if ($git_result = shell_exec('git pull')) {
 			$output->write($git_result);
 			$dependencies = $this->getDependenciesNotInstalled();
-			if (!empty($dependencies)) {
+			if (!empty($dependencies) || $force_update) {
 				$output->write("Les dépendances vont être installé : \n" . implode("\n", $dependencies));
 				exec('composer update');
 			}

@@ -1,8 +1,8 @@
 <?= $renderer->render('header') ?>
 
-	<div class="container">
-		<h1>Ajouter un commerce</h1>
+<div class="container">
+	<h1>Editer un commerce</h1>
 		<?= $renderer->render('shop/partials/form') ?>
-	</div>
+</div>
 
 <?= $renderer->render('footer') ?>

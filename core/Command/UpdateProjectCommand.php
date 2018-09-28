@@ -38,7 +38,7 @@ class UpdateProjectCommand extends Command
 			$output->write($git_result);
 			$dependencies = $this->getDependenciesNotInstalled();
 			if (!empty($dependencies) || $force_update) {
-				$output->write("Les dépendances vont être installé : \n" . implode("\n", $dependencies));
+				$output->write("Les dépendances vont être installé : \n" . join("\n", $dependencies));
 				exec('composer update');
 			}
 			return $output->writeln('Le projet à bien été mis à jour');

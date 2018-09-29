@@ -1,6 +1,7 @@
 <?php
 namespace Core\Container;
 
+use Doctrine\DBAL\Connection;
 use Exception;
 use Psr\Container\ContainerInterface;
 use ReflectionClass;
@@ -144,18 +145,30 @@ class DIC implements ContainerInterface
 		$resolve_parameters = [];
 		foreach ($parameters as $parameter) {
 			if ($parameter_class = $parameter->getClass()) {
-				if ($parameter_class->getName() === Request::class) {
-					$resolve_parameters[] = $this->request;
-				}
-				elseif ($parameter_class->getName() === Response::class) {
-					$resolve_parameters[] = $this->response;
-				}
-				else {
-					$resolve_parameters[] = $this->get($parameter_class->getName());
-				}
+			  switch ($parameter_class->getName()) {
+          case Request::class:
+            $resolve_parameters[] = $this->request;
+            break;
+          case Response::class:
+            $resolve_parameters[] = $this->response;
+            break;
+          case ContainerInterface::class:
+            $resolve_parameters[] = $this;
+            break;
+          default:
+            $resolve_parameters[] = $this->get($parameter_class->getName());
+            break;
+        }
 			}
 			else {
-				$resolve_parameters[] = $parameter->getDefaultValue();
+			  if ($parameter->getName() === 'id' && $parameter->getType()->getName() === 'int') {
+			    /** @var $connection Connection */
+			    $connection = $this->get(Connection::class);
+          $resolve_parameters[] = $this->request->query->get('id');
+        }
+        else {
+          $resolve_parameters[] = $parameter->getDefaultValue();
+        }
 			}
 		}
 		return $resolve_parameters;

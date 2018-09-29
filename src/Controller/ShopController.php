@@ -19,9 +19,21 @@ class ShopController
    */
   private $shopTable;
 
-  public function __construct(ShopTable $shopTable)
+  /**
+   * @var PhpRenderer
+   */
+  private $renderer;
+
+  /**
+   * ShopController constructor
+   *
+   * @param ShopTable $shopTable
+   * @param PhpRenderer $renderer
+   */
+  public function __construct(ShopTable $shopTable, PhpRenderer $renderer)
   {
     $this->shopTable = $shopTable;
+    $this->renderer  = $renderer;
   }
 
   /**
@@ -40,23 +52,35 @@ class ShopController
    * @return string
    * @throws \Exception
    */
-	public function create(PhpRenderer $renderer, Request $request, GeocoderService $geocoderService)
+	public function create(Request $request, GeocoderService $geocoderService)
 	{
 		if ($request->getMethod() === 'POST') {
 		  $address = $request->request->get('street') . ' ' . $request->request->get('postal_code')
         . ' ' . $request->request->get('city')
         . ' ' . $request->request->get('country');
-		  $addresses_found = $geocoderService->addressToCoordinate($address)->first();
-		  if ($addresses_found) {
-        $request->request->set('description', 'aeaz');
+		  if ($addresses_found = $geocoderService->addressToCoordinate($address)->first()) {
         $request->request->set('longitude', $addresses_found->getCoordinates()->getLongitude());
         $request->request->set('latitude', $addresses_found->getCoordinates()->getLatitude());
-        $request->request->set('enable', '0');
       }
 			$this->shopTable->save($request->request->all());
 			return new RedirectResponse('/');
 		}
-		return $renderer->render('shop.create');
+		return $this->renderer->render('shop.create');
 	}
+
+  /**
+   * @param int $id
+   * @param Request $request
+   * @return string
+   * @throws \Exception
+   */
+	public function edit(int $id, Request $request)
+  {
+    $shop = $this->shopTable->get($id);
+    if ($request->getMethod() === 'POST') {
+      // Update the shop
+    }
+    return $this->renderer->render('shop.edit', compact('shop'));
+  }
 
 }

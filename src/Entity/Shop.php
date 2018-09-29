@@ -4,6 +4,11 @@ namespace App\Entity;
 class Shop
 {
 
+  /**
+   * @var int
+   */
+  public $id;
+
 	/**
 	 * @var string
 	 */
@@ -48,7 +53,7 @@ class Shop
 	/**
 	 * @var boolean
 	 */
-	public $enable = false;
+	public $enable = 0;
 
 
 }

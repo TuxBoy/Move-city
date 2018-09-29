@@ -6,7 +6,7 @@
 		<div class="panel-body">
 			<div class="form-group">
 				<label for="name">Nom :</label>
-				<input type="text" name="name" class="form-control">
+				<input type="text" name="name" class="form-control" value="<?= $shop->name ?>">
 			</div>
 			<div class="row">
 				<div class="col-md-6">
@@ -50,6 +50,10 @@
 					</div>
 				</div>
 			</div>
+            <div class="form-group">
+                <label for="description">Description :</label>
+                <textarea name="description" id="description" class="form-control"></textarea>
+            </div>
 			<div class="checkbox">
 				<label>
 					<input type="checkbox"> Activer ?

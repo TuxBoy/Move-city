@@ -27,6 +27,26 @@ class ShopTable
 		$this->connection = $connection;
 	}
 
+  /**
+   * @param int $id
+   * @return Shop
+   * @throws \Exception
+   */
+	public function get(int $id) : Shop
+  {
+    $record = $this->connection->createQueryBuilder()
+      ->select('*')
+      ->from('shops', 's')
+      ->where('s.id = ?')
+      ->setParameter(0, $id)
+      ->execute()
+      ->fetch();
+    if (!$record) {
+      throw new \Exception("The $id param id is not found");
+    }
+    return $this->hydrate($record, Shop::class);
+  }
+
 	/**
 	 * Return all data in the database
 	 *
@@ -61,5 +81,21 @@ class ShopTable
 			->setParameters(array_values($values))
 			->execute();
 	}
+
+  /**
+   * @param array $record
+   * @param string $entity
+   * @return string
+   */
+  private function hydrate(array $record, string $entity)
+  {
+    $entity = new $entity;
+    foreach ($record as $property => $value) {
+      if (property_exists($entity, $property)) {
+        $entity->$property = $value;
+      }
+    }
+    return $entity;
+  }
 
 }

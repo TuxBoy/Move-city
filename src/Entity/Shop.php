@@ -1,7 +1,9 @@
 <?php
 namespace App\Entity;
 
-class Shop
+use Core\Entity;
+
+class Shop extends Entity
 {
 
   /**
@@ -54,6 +56,36 @@ class Shop
 	 * @var boolean
 	 */
 	public $enable = 0;
+
+  /**
+   * @return string
+   */
+	public function __toString(): string
+  {
+    return $this->street. ' ' . $this->postal_code . ' ' . $this->city . ' ' . $this->country;
+  }
+
+  /**
+   * @param float $latitude
+   * @return Shop
+   */
+  public function setLatitude(float $latitude): Shop
+  {
+    $this->latitude = $latitude;
+
+    return $this;
+  }
+
+  /**
+   * @param float $longitude
+   * @return Shop
+   */
+  public function setLongitude(float $longitude): Shop
+  {
+    $this->longitude = $longitude;
+
+    return $this;
+  }
 
 
 }

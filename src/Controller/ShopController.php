@@ -1,6 +1,7 @@
 <?php
 namespace App\Controller;
 
+use App\Entity\Shop;
 use App\Service\GeocoderService;
 use App\Table\ShopTable;
 use Core\PhpRenderer;
@@ -54,18 +55,17 @@ class ShopController
    */
 	public function create(Request $request, GeocoderService $geocoderService)
 	{
-		if ($request->getMethod() === 'POST') {
-		  $address = $request->request->get('street') . ' ' . $request->request->get('postal_code')
-        . ' ' . $request->request->get('city')
-        . ' ' . $request->request->get('country');
-		  if ($addresses_found = $geocoderService->addressToCoordinate($address)->first()) {
-        $request->request->set('longitude', $addresses_found->getCoordinates()->getLongitude());
-        $request->request->set('latitude', $addresses_found->getCoordinates()->getLatitude());
+    if ($request->getMethod() === 'POST') {
+      $shop = new Shop($request->request->all());
+		  if ($addresses_found = $geocoderService->addressToCoordinate((string) $shop)->first()) {
+        $shop
+          ->setLongitude($addresses_found->getCoordinates()->getLongitude())
+          ->setLatitude($addresses_found->getCoordinates()->getLatitude());
       }
-			$this->shopTable->save($request->request->all());
+			$this->shopTable->save($shop);
 			return new RedirectResponse('/');
 		}
-		return $this->renderer->render('shop.create');
+		return $this->renderer->render('shop.create', ['shop' => new Shop()]);
 	}
 
   /**
@@ -78,7 +78,9 @@ class ShopController
   {
     $shop = $this->shopTable->get($id);
     if ($request->getMethod() === 'POST') {
-      // Update the shop
+      $shop->set($request->request->all());
+      $this->shopTable->save($shop);
+      return new RedirectResponse('/shop/edit?id=' . $id);
     }
     return $this->renderer->render('shop.edit', compact('shop'));
   }

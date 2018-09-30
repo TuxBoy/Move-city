@@ -2,9 +2,13 @@
 namespace App\Table;
 
 use App\Entity\Shop;
+use Core\Entity;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Driver\Statement;
 use Doctrine\DBAL\FetchMode;
+use Doctrine\DBAL\ParameterType;
+use ReflectionClass;
+use ReflectionException;
 
 /**
  * Class ShopTable
@@ -61,19 +65,34 @@ class ShopTable
 			->fetchAll(FetchMode::CUSTOM_OBJECT, Shop::class);
 	}
 
-	/**
-	 * @param array $data
-	 * @return Statement|int
-	 */
-	public function save(array $data = []): int
+  /**
+   * Insert or update if id index exist
+   *
+   * @param array|object $data
+   * @return Statement|int
+   * @throws ReflectionException
+   */
+	public function save($data): int
 	{
+	  if (is_object($data)) {
+      $data = $this->objectToArray($data);
+    }
+    $update         = isset($data['id']) && !empty($data['id']);
 		$values         = array_filter($data); // Clear null data
 		$prepare_values = [];
 		// Build values for the prepare query ('key' => '?' ..)
-		array_map(function ($value) use (&$prepare_values) {
-			$prepare_values[$value] = '?';
-		}, array_keys($values));
+    foreach ($values as $field => $value) {
+      $prepare_values[$value] = ':' . $field;
+		}
 
+		if ($update) {
+      $identifier = [];
+      if (isset($values['id'])) {
+        $identifier['id'] = (int) $values['id'];
+        unset($values['id']);
+      }
+      return $this->connection->update('shops', $values, $identifier);
+    }
 		return $this->connection
 			->createQueryBuilder()
 			->insert('shops')
@@ -96,6 +115,24 @@ class ShopTable
       }
     }
     return $entity;
+  }
+
+  /**
+   * @param Entity $entity
+   * @return array
+   * @throws ReflectionException
+   */
+  private function objectToArray(Entity $entity): array
+  {
+    $result = [];
+    $class  = new ReflectionClass(get_class($entity));
+    foreach ($class->getProperties() as $property) {
+      if ($property->getValue($entity) === 'on') {
+        $property->setValue($entity, 1);
+      }
+      $result[$property->getName()] = $property->getValue($entity);
+    }
+    return $result;
   }
 
 }

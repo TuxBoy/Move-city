@@ -6,7 +6,7 @@ use Core\Entity;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Driver\Statement;
 use Doctrine\DBAL\FetchMode;
-use Doctrine\DBAL\ParameterType;
+use Doctrine\DBAL\Types\Type;
 use ReflectionClass;
 use ReflectionException;
 
@@ -65,13 +65,13 @@ class ShopTable
 			->fetchAll(FetchMode::CUSTOM_OBJECT, Shop::class);
 	}
 
-  /**
-   * Insert or update if id index exist
-   *
-   * @param array|object $data
-   * @return Statement|int
-   * @throws ReflectionException
-   */
+	/**
+	 * Insert or update if id index exist
+	 *
+	 * @param array|object $data
+	 * @return Statement|int
+	 * @throws ReflectionException|\Doctrine\DBAL\DBALException
+	 */
 	public function save($data): int
 	{
 	  if (is_object($data)) {
@@ -134,5 +134,15 @@ class ShopTable
     }
     return $result;
   }
+
+	/**
+	 * @param int $id
+	 * @return int
+	 * @throws \Doctrine\DBAL\DBALException|\Doctrine\DBAL\Exception\InvalidArgumentException
+	 */
+	public function delete(int $id): int
+	{
+		return $this->connection->delete('shops', ['id' => $id], ['id' => Type::INTEGER]);
+	}
 
 }

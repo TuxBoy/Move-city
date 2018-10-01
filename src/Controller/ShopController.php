@@ -5,6 +5,7 @@ use App\Entity\Shop;
 use App\Service\GeocoderService;
 use App\Table\ShopTable;
 use Core\PhpRenderer;
+use Http\Discovery\Exception\NotFoundException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -38,16 +39,23 @@ class ShopController
   }
 
   /**
-	 * @param ShopTable $shopTable
 	 * @return JsonResponse
 	 */
-	public function index(): JsonResponse
+	public function api(): JsonResponse
 	{
 		return new JsonResponse($this->shopTable->getAll());
 	}
 
+	/**
+	 * @return string
+	 * @throws \Exception
+	 */
+	public function index()
+	{
+		return $this->renderer->render('shop.index', ['shops' => $this->shopTable->getAll()]);
+	}
+
   /**
-   * @param PhpRenderer $renderer
    * @param Request $request
    * @param GeocoderService $geocoderService
    * @return string
@@ -84,5 +92,23 @@ class ShopController
     }
     return $this->renderer->render('shop.edit', compact('shop'));
   }
+
+	/**
+	 * @param int     $id
+	 * @param Request $request
+	 * @return RedirectResponse
+	 * @throws \Exception
+	 */
+  public function delete(int $id, Request $request)
+	{
+		if ($request->getMethod() !== 'POST') {
+			throw new \Exception("Not allow resource method");
+		}
+		if (!$this->shopTable->get($id)) {
+			throw new NotFoundException("Aucun commerce n'a été trouvé pour cet identifiant");
+		}
+		$this->shopTable->delete($id);
+		return new RedirectResponse('/shop');
+	}
 
 }

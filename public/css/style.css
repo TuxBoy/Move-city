@@ -132,4 +132,8 @@ li a:hover {
 	position: relative;
 }
 
+.form-delete {
+	display: inline-block;
+}
+
 

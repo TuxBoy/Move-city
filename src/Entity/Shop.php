@@ -55,10 +55,10 @@ class Shop extends Entity
 	/**
 	 * @var boolean
 	 */
-	public $enable = 0;
+	public $enable;
 
   /**
-	 * A Shop is represented by its address
+	 * A shop is represented by its address
 	 *
    * @return string
    */

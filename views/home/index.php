@@ -7,7 +7,7 @@
 <div id="macarte"></div>
 
 <script>
-	Ajax.get('/shop/index').then((shops) => {
+	Ajax.get('/shop/api').then((shops) => {
 		new Map(L).createMap(46.3630104, 2.9846608, 6, shops)
 	})
 </script>

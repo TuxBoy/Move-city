@@ -60,7 +60,7 @@ $action = ($shop && $shop->id) ? '/shop/edit?id=' . $shop->id : '/shop/create';
             </div>
 			<div class="checkbox">
 				<label>
-					<input type="checkbox" name="enable" value="<?= $shop->enable ?>" <?= $shop->enable ? 'checked': '' ?>> Activer ?
+					<input type="checkbox" name="enable" <?= $shop->enable ? 'checked' : '' ?>> Activer ?
 				</label>
 			</div>
 		</div>

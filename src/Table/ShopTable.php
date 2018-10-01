@@ -56,11 +56,26 @@ class ShopTable
 	 *
 	 * @return Shop[]
 	 */
-	public function getAll()
+	public function getAll(): array
 	{
 		return $this->connection->createQueryBuilder()
 			->select('*')
 			->from('shops')
+			->orderBy('id', 'DESC')
+			->execute()
+			->fetchAll(FetchMode::CUSTOM_OBJECT, Shop::class);
+	}
+
+	/**
+	 * @return Shop[]
+	 */
+	public function getEnableShops(): array
+	{
+		return $this->connection->createQueryBuilder()
+			->select('*')
+			->from('shops', 's')
+			->orderBy('id', 'DESC')
+			->where('s.enable=1')
 			->execute()
 			->fetchAll(FetchMode::CUSTOM_OBJECT, Shop::class);
 	}
@@ -81,9 +96,9 @@ class ShopTable
 		$values         = array_filter($data); // Clear null data
 		$prepare_values = [];
 		// Build values for the prepare query ('key' => '?' ..)
-    foreach ($values as $field => $value) {
-      $prepare_values[$value] = ':' . $field;
-		}
+		array_map(function ($value) use (&$prepare_values) {
+			$prepare_values[$value] = '?';
+		}, array_keys($values));
 
 		if ($update) {
       $identifier = [];

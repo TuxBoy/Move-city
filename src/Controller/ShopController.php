@@ -43,7 +43,7 @@ class ShopController
 	 */
 	public function api(): JsonResponse
 	{
-		return new JsonResponse($this->shopTable->getAll());
+		return new JsonResponse($this->shopTable->getEnableShops());
 	}
 
 	/**
@@ -71,7 +71,7 @@ class ShopController
           ->setLatitude($addresses_found->getCoordinates()->getLatitude());
       }
 			$this->shopTable->save($shop);
-			return new RedirectResponse('/');
+			return new RedirectResponse('/shop');
 		}
 		return $this->renderer->render('shop.create', ['shop' => new Shop()]);
 	}
@@ -85,10 +85,10 @@ class ShopController
 	public function edit(int $id, Request $request)
   {
     $shop = $this->shopTable->get($id);
-    if ($request->getMethod() === 'POST') {
-      $shop->set($request->request->all());
+		if ($request->getMethod() === 'POST') {
+			$shop->set($request->request->all());
       $this->shopTable->save($shop);
-      return new RedirectResponse('/shop/edit?id=' . $id);
+      return new RedirectResponse('/shop');
     }
     return $this->renderer->render('shop.edit', compact('shop'));
   }

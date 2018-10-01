@@ -58,6 +58,8 @@ class Shop extends Entity
 	public $enable = 0;
 
   /**
+	 * A Shop is represented by its address
+	 *
    * @return string
    */
 	public function __toString(): string

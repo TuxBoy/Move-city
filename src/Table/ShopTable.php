@@ -33,7 +33,7 @@ class ShopTable
 
   /**
    * @param int $id
-   * @return Shop
+   * @return Shop|object
    * @throws \Exception
    */
 	public function get(int $id) : Shop
@@ -68,7 +68,7 @@ class ShopTable
 	/**
 	 * Insert or update if id index exist
 	 *
-	 * @param array|object $data
+	 * @param array|Entity $data
 	 * @return Statement|int
 	 * @throws ReflectionException|\Doctrine\DBAL\DBALException
 	 */
@@ -104,7 +104,7 @@ class ShopTable
   /**
    * @param array $record
    * @param string $entity
-   * @return string
+   * @return string|object Hydrate entity
    */
   private function hydrate(array $record, string $entity)
   {

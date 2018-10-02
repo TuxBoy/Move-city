@@ -1,16 +1,7 @@
 <?= $renderer->render('header') ?>
 
-<!-- Ici, nous allons récupérer pour afficher la carte depuis une autre shop.
-  ================================================================= -->
-
 <!-- Le conteneur de notre carte (avec une contrainte CSS pour la taille -->
 <div id="macarte"></div>
-
-<script>
-	Ajax.get('/shop/api').then((shops) => {
-		new Map(L).createMap(46.3630104, 2.9846608, 6, shops)
-	})
-</script>
 
 <!-- 3e range partie recherche ========================================
 ================================================================= -->

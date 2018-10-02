@@ -93,34 +93,33 @@ class ShopTable
       $data = $this->objectToArray($data);
     }
     $update         = isset($data['id']) && !empty($data['id']);
-		$values         = array_filter($data); // Clear null data
 		$prepare_values = [];
 		// Build values for the prepare query ('key' => '?' ..)
 		array_map(function ($value) use (&$prepare_values) {
 			$prepare_values[$value] = '?';
-		}, array_keys($values));
+		}, array_keys($data));
 
 		if ($update) {
       $identifier = [];
-      if (isset($values['id'])) {
-        $identifier['id'] = (int) $values['id'];
-        unset($values['id']);
+      if (isset($data['id'])) {
+        $identifier['id'] = (int) $data['id'];
+        unset($data['id']);
       }
-      return $this->connection->update('shops', $values, $identifier);
+      return $this->connection->update('shops', $data, $identifier);
     }
 		return $this->connection
 			->createQueryBuilder()
 			->insert('shops')
 			->values($prepare_values)
-			->setParameters(array_values($values))
+			->setParameters(array_values($data))
 			->execute();
 	}
 
-  /**
-   * @param array $record
-   * @param string $entity
-   * @return string|object Hydrate entity
-   */
+	/**
+	 * @param array  $record
+	 * @param string $entity
+	 * @return string|object Hydrate entity
+	 */
   private function hydrate(array $record, string $entity)
   {
     $entity = new $entity;
@@ -142,9 +141,12 @@ class ShopTable
     $result = [];
     $class  = new ReflectionClass(get_class($entity));
     foreach ($class->getProperties() as $property) {
-      if ($property->getValue($entity) === 'on') {
+      if ($property->getValue($entity) === '1') {
         $property->setValue($entity, 1);
       }
+      elseif ($property->getValue($entity) === "0") {
+				$property->setValue($entity, 0);
+			}
       $result[$property->getName()] = $property->getValue($entity);
     }
     return $result;

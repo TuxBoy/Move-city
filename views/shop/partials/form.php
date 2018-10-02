@@ -54,13 +54,14 @@ $action = ($shop && $shop->id) ? '/shop/edit?id=' . $shop->id : '/shop/create';
 					</div>
 				</div>
 			</div>
-            <div class="form-group">
-                <label for="description">Description :</label>
-                <textarea name="description" id="description" class="form-control"><?= $shop->description ?></textarea>
-            </div>
+      <div class="form-group">
+          <label for="description">Description :</label>
+          <textarea name="description" id="description" class="form-control"><?= $shop->description ?></textarea>
+      </div>
 			<div class="checkbox">
 				<label>
-					<input type="checkbox" name="enable" <?= $shop->enable ? 'checked' : '' ?>> Activer ?
+					<input type="hidden" name="enable" value="0">
+					<input type="checkbox" name="enable" <?= $shop->enable ? 'checked' : '' ?> value="1"> Activer ?
 				</label>
 			</div>
 		</div>

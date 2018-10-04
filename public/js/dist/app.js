@@ -761,8 +761,10 @@ module.exports = __webpack_require__(31);
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_axios__ = __webpack_require__(9);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_axios___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_axios__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_load_google_maps_api__ = __webpack_require__(30);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_load_google_maps_api__ = __webpack_require__(29);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_load_google_maps_api___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_load_google_maps_api__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__map_Marker__ = __webpack_require__(30);
+
 
 
 
@@ -772,30 +774,22 @@ var map_params = {
 	zoom: 6
 };
 
-__WEBPACK_IMPORTED_MODULE_1_load_google_maps_api___default()().then(function (googleMaps) {
-	var map = new googleMaps.Map(document.querySelector('#macarte'), {
-		center: {
-			lat: map_params.lat,
-			lng: map_params.lng
-		},
-		zoom: map_params.zoom
+__WEBPACK_IMPORTED_MODULE_1_load_google_maps_api___default()({ v: '3.exp' }).then(function (googleMaps) {
+	var map = document.querySelector('#macarte');
+	var center = new google.maps.LatLng(map_params.lat, map_params.lng);
+	var gmap = new google.maps.Map(map, {
+		scrollwheel: false,
+		draggable: true,
+		controls: true,
+		center: center,
+		zoom: 6,
+		mapTypeId: googleMaps.MapTypeId.ROADMAP
 	});
-
 	__WEBPACK_IMPORTED_MODULE_0_axios___default.a.get('/shop/api').then(function (response) {
-
 		response.data.forEach(function (shop) {
-			var marker = new googleMaps.Marker({
-				position: new googleMaps.LatLng(shop.latitude, shop.longitude),
-				title: shop.name,
-				map: map
-			});
-			googleMaps.event.addListener(marker, 'click', function () {
-				var infowindow = new googleMaps.InfoWindow({
-					content: shop.description,
-					size: new googleMaps.Size(100, 100)
-				});
-				infowindow.open(map, marker);
-			});
+			var marker = new __WEBPACK_IMPORTED_MODULE_2__map_Marker__["a" /* default */](googleMaps, gmap);
+			marker.add(shop.title, shop);
+			marker.addListener(shop.description);
 		});
 	}).catch(function (error) {
 		return console.log(error);
@@ -1883,8 +1877,7 @@ module.exports = function spread(callback) {
 
 
 /***/ }),
-/* 29 */,
-/* 30 */
+/* 29 */
 /***/ (function(module, exports) {
 
 var CALLBACK_NAME = '__googleMapsApiOnLoadCallback'
@@ -1935,6 +1928,54 @@ module.exports = function (options) {
   return promise
 }
 
+
+/***/ }),
+/* 30 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Marker = function () {
+	function Marker(googleMaps, map) {
+		_classCallCheck(this, Marker);
+
+		this.map = map;
+		this.googleMaps = googleMaps;
+	}
+
+	_createClass(Marker, [{
+		key: 'add',
+		value: function add(title, data) {
+			this.marker = new this.googleMaps.Marker({
+				position: new this.googleMaps.LatLng(data.latitude, data.longitude),
+				title: title,
+				map: this.map
+			});
+		}
+	}, {
+		key: 'addListener',
+		value: function addListener(content) {
+			var _this = this;
+
+			var type = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'click';
+
+			this.googleMaps.event.addListener(this.marker, type, function () {
+				var infowindow = new _this.googleMaps.InfoWindow({
+					content: content,
+					size: new _this.googleMaps.Size(100, 100)
+				});
+				infowindow.open(_this.map, _this.marker);
+			});
+		}
+	}]);
+
+	return Marker;
+}();
+
+/* harmony default export */ __webpack_exports__["a"] = (Marker);
 
 /***/ }),
 /* 31 */

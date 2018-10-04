@@ -1,5 +1,4 @@
 import axios from 'axios'
-import Map from "./map/Map";
 import loadGoogleMapsApi from 'load-google-maps-api'
 
 
@@ -9,9 +8,8 @@ const map_params = {
 	zoom : 6
 }
 
-let map
 loadGoogleMapsApi().then(googleMaps => {
-	map = new googleMaps.Map(document.querySelector('#macarte'), {
+	let map = new googleMaps.Map(document.querySelector('#macarte'), {
 		center: {
 			lat: map_params.lat,
 			lng: map_params.lng
@@ -23,10 +21,17 @@ loadGoogleMapsApi().then(googleMaps => {
 	axios.get('/shop/api').then(response => {
 
 		response.data.forEach(shop => {
-			new googleMaps.Marker({
+			let marker = new googleMaps.Marker({
 				position : new googleMaps.LatLng(shop.latitude, shop.longitude),
 				title: shop.name,
 				map: map
+			})
+			googleMaps.event.addListener(marker, 'click', () => {
+				let infowindow = new googleMaps.InfoWindow({
+					content: shop.description,
+					size: new googleMaps.Size(100, 100)
+				});
+				infowindow.open(map, marker)
 			})
 		})
 	}).catch(error => console.log(error))

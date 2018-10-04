@@ -750,7 +750,7 @@ module.exports = Cancel;
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(8);
-module.exports = __webpack_require__(30);
+module.exports = __webpack_require__(31);
 
 
 /***/ }),
@@ -761,10 +761,8 @@ module.exports = __webpack_require__(30);
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_axios__ = __webpack_require__(9);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_axios___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_axios__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__map_Map__ = __webpack_require__(29);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_load_google_maps_api__ = __webpack_require__(35);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_load_google_maps_api___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_load_google_maps_api__);
-
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_load_google_maps_api__ = __webpack_require__(30);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_load_google_maps_api___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_load_google_maps_api__);
 
 
 
@@ -774,9 +772,8 @@ var map_params = {
 	zoom: 6
 };
 
-var map = void 0;
-__WEBPACK_IMPORTED_MODULE_2_load_google_maps_api___default()().then(function (googleMaps) {
-	map = new googleMaps.Map(document.querySelector('#macarte'), {
+__WEBPACK_IMPORTED_MODULE_1_load_google_maps_api___default()().then(function (googleMaps) {
+	var map = new googleMaps.Map(document.querySelector('#macarte'), {
 		center: {
 			lat: map_params.lat,
 			lng: map_params.lng
@@ -787,10 +784,17 @@ __WEBPACK_IMPORTED_MODULE_2_load_google_maps_api___default()().then(function (go
 	__WEBPACK_IMPORTED_MODULE_0_axios___default.a.get('/shop/api').then(function (response) {
 
 		response.data.forEach(function (shop) {
-			new googleMaps.Marker({
+			var marker = new googleMaps.Marker({
 				position: new googleMaps.LatLng(shop.latitude, shop.longitude),
 				title: shop.name,
 				map: map
+			});
+			googleMaps.event.addListener(marker, 'click', function () {
+				var infowindow = new googleMaps.InfoWindow({
+					content: shop.description,
+					size: new googleMaps.Size(100, 100)
+				});
+				infowindow.open(map, marker);
 			});
 		});
 	}).catch(function (error) {
@@ -1879,54 +1883,8 @@ module.exports = function spread(callback) {
 
 
 /***/ }),
-/* 29 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var Map = function () {
-
-	/**
-  *
-  */
-	function Map(map) {
-		_classCallCheck(this, Map);
-	}
-
-	_createClass(Map, [{
-		key: "createMap",
-		value: function createMap() {
-			var _this = this;
-
-			positions.forEach(function (pos) {
-				_this.addMarker(pos.latitude, pos.longitude);
-			});
-		}
-	}, {
-		key: "addMarker",
-		value: function addMarker(latitude, longitude) {}
-	}]);
-
-	return Map;
-}();
-
-/* unused harmony default export */ var _unused_webpack_default_export = (Map);
-
-/***/ }),
+/* 29 */,
 /* 30 */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
-/* 31 */,
-/* 32 */,
-/* 33 */,
-/* 34 */,
-/* 35 */
 /***/ (function(module, exports) {
 
 var CALLBACK_NAME = '__googleMapsApiOnLoadCallback'
@@ -1977,6 +1935,12 @@ module.exports = function (options) {
   return promise
 }
 
+
+/***/ }),
+/* 31 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
 
 /***/ })
 /******/ ]);

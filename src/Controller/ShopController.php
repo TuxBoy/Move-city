@@ -111,4 +111,14 @@ class ShopController
 		return new RedirectResponse('/shop');
 	}
 
+	/**
+	 * @param int $id
+	 * @return string
+	 * @throws \Exception
+	 */
+	public function show(int $id): string
+	{
+		return $this->renderer->render('shop.show', ['shop' => $this->shopTable->get($id)]);
+	}
+
 }

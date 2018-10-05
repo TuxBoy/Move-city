@@ -761,8 +761,8 @@ module.exports = __webpack_require__(31);
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_axios__ = __webpack_require__(9);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_axios___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_axios__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__map_Marker__ = __webpack_require__(30);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__map_Map__ = __webpack_require__(36);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__map_Marker__ = __webpack_require__(29);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__map_Map__ = __webpack_require__(30);
 
 
 
@@ -1858,8 +1858,7 @@ module.exports = function spread(callback) {
 
 
 /***/ }),
-/* 29 */,
-/* 30 */
+/* 29 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1907,17 +1906,7 @@ var Marker = function () {
 /* unused harmony default export */ var _unused_webpack_default_export = (Marker);
 
 /***/ }),
-/* 31 */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
-/* 32 */,
-/* 33 */,
-/* 34 */,
-/* 35 */,
-/* 36 */
+/* 30 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1926,6 +1915,13 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var Map = function () {
+
+	/**
+  * @see https://leafletjs.com/reference-1.3.4.html#marker
+  *
+  * @param L
+  * @param element
+  */
 	function Map(L, element) {
 		_classCallCheck(this, Map);
 
@@ -1934,6 +1930,15 @@ var Map = function () {
 		this.markers = null;
 		this.element = element;
 	}
+
+	/**
+  *
+  * @param lat
+  * @param lng
+  * @param zoom
+  * @param shops
+  */
+
 
 	_createClass(Map, [{
 		key: 'createMap',
@@ -1944,23 +1949,32 @@ var Map = function () {
 			var shops = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : [];
 
 			this.map = this.L.map(this.element).setView([lat, lng], zoom);
-
 			this.L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png').addTo(this.map);
 
 			// Notre cluster
 			this.markers = this.L.markerClusterGroup();
 
 			shops.forEach(function (shop) {
-				_this.addMarker(shop.latitude, shop.longitude, {
+				_this.addMarker(shop, {
 					title: shop.name
 				});
 			});
 		}
+
+		/**
+   *
+   * @param data
+   * @param options
+   */
+
 	}, {
 		key: 'addMarker',
-		value: function addMarker(lat, lng, options) {
-			this.markers.addLayer(this.L.marker([lat, lng], options));
+		value: function addMarker(data, options) {
+			var contentPopupText = data.description + (' <a href="/shop/show?id=' + data.id + '">En savoir plus</a>');
+			var popupContent = this.L.popup().setLatLng([data.latitude, data.longitude]).setContent(contentPopupText);
+			this.markers.addLayer(this.L.marker([data.latitude, data.longitude], options).bindPopup(popupContent).openPopup());
 			// On affiche le cluster
+
 			this.map.addLayer(this.markers);
 		}
 	}]);
@@ -1969,6 +1983,12 @@ var Map = function () {
 }();
 
 /* harmony default export */ __webpack_exports__["a"] = (Map);
+
+/***/ }),
+/* 31 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
 
 /***/ })
 /******/ ]);

@@ -1,6 +1,6 @@
 import axios from 'axios'
-import loadGoogleMapsApi from 'load-google-maps-api'
 import Marker from "./map/Marker";
+import Map from "./map/Map";
 
 
 const map_params = {
@@ -8,23 +8,7 @@ const map_params = {
 	lng    : 2.9846608,
 	zoom : 6
 }
-
-loadGoogleMapsApi({v: '3.exp'}).then(googleMaps => {
-	let map    = document.querySelector('#macarte');
-	let center = new google.maps.LatLng(map_params.lat, map_params.lng)
-	let gmap   = new google.maps.Map(map, {
-		scrollwheel: false,
-		draggable: true,
-		controls: true,
-		center: center,
-		zoom: 6,
-		mapTypeId: googleMaps.MapTypeId.ROADMAP
-	})
-	axios.get('/shop/api').then(response => {
-		response.data.forEach(shop => {
-			let marker = new Marker(googleMaps, gmap)
-			marker.add(shop.title, shop)
-			marker.addListener(shop.description)
-		})
-	}).catch(error => console.log(error))
-}).catch(error => console.error(error) )
+axios.get('/shop/api').then(response => {
+	let shops = response.data
+	new Map(L, 'macarte').createMap(map_params.lat, map_params.lng, map_params.zoom, shops)
+}).catch(error => console.log(error))

@@ -761,9 +761,8 @@ module.exports = __webpack_require__(31);
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_axios__ = __webpack_require__(9);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_axios___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_axios__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_load_google_maps_api__ = __webpack_require__(29);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_load_google_maps_api___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_load_google_maps_api__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__map_Marker__ = __webpack_require__(30);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__map_Marker__ = __webpack_require__(30);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__map_Map__ = __webpack_require__(36);
 
 
 
@@ -773,29 +772,11 @@ var map_params = {
 	lng: 2.9846608,
 	zoom: 6
 };
-
-__WEBPACK_IMPORTED_MODULE_1_load_google_maps_api___default()({ v: '3.exp' }).then(function (googleMaps) {
-	var map = document.querySelector('#macarte');
-	var center = new google.maps.LatLng(map_params.lat, map_params.lng);
-	var gmap = new google.maps.Map(map, {
-		scrollwheel: false,
-		draggable: true,
-		controls: true,
-		center: center,
-		zoom: 6,
-		mapTypeId: googleMaps.MapTypeId.ROADMAP
-	});
-	__WEBPACK_IMPORTED_MODULE_0_axios___default.a.get('/shop/api').then(function (response) {
-		response.data.forEach(function (shop) {
-			var marker = new __WEBPACK_IMPORTED_MODULE_2__map_Marker__["a" /* default */](googleMaps, gmap);
-			marker.add(shop.title, shop);
-			marker.addListener(shop.description);
-		});
-	}).catch(function (error) {
-		return console.log(error);
-	});
+__WEBPACK_IMPORTED_MODULE_0_axios___default.a.get('/shop/api').then(function (response) {
+	var shops = response.data;
+	new __WEBPACK_IMPORTED_MODULE_2__map_Map__["a" /* default */](L, 'macarte').createMap(map_params.lat, map_params.lng, map_params.zoom, shops);
 }).catch(function (error) {
-	return console.error(error);
+	return console.log(error);
 });
 
 /***/ }),
@@ -1877,59 +1858,7 @@ module.exports = function spread(callback) {
 
 
 /***/ }),
-/* 29 */
-/***/ (function(module, exports) {
-
-var CALLBACK_NAME = '__googleMapsApiOnLoadCallback'
-
-var OPTIONS_KEYS = ['channel', 'client', 'key', 'language', 'region', 'v']
-
-var promise = null
-
-module.exports = function (options) {
-  options = options || {}
-
-  if (!promise) {
-    promise = new Promise(function (resolve, reject) {
-      // Reject the promise after a timeout
-      var timeoutId = setTimeout(function () {
-        window[CALLBACK_NAME] = function () {} // Set the on load callback to a no-op
-        reject(new Error('Could not load the Google Maps API'))
-      }, options.timeout || 10000)
-
-      // Hook up the on load callback
-      window[CALLBACK_NAME] = function () {
-        if (timeoutId !== null) {
-          clearTimeout(timeoutId)
-        }
-        resolve(window.google.maps)
-        delete window[CALLBACK_NAME]
-      }
-
-      // Prepare the `script` tag to be inserted into the page
-      var scriptElement = document.createElement('script')
-      var params = ['callback=' + CALLBACK_NAME]
-      OPTIONS_KEYS.forEach(function (key) {
-        if (options[key]) {
-          params.push(key + '=' + options[key])
-        }
-      })
-      if (options.libraries && options.libraries.length) {
-        params.push('libraries=' + options.libraries.join(','))
-      }
-      scriptElement.src =
-        'https://maps.googleapis.com/maps/api/js?' + params.join('&')
-
-      // Insert the `script` tag
-      document.body.appendChild(scriptElement)
-    })
-  }
-
-  return promise
-}
-
-
-/***/ }),
+/* 29 */,
 /* 30 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -1975,13 +1904,71 @@ var Marker = function () {
 	return Marker;
 }();
 
-/* harmony default export */ __webpack_exports__["a"] = (Marker);
+/* unused harmony default export */ var _unused_webpack_default_export = (Marker);
 
 /***/ }),
 /* 31 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 32 */,
+/* 33 */,
+/* 34 */,
+/* 35 */,
+/* 36 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Map = function () {
+	function Map(L, element) {
+		_classCallCheck(this, Map);
+
+		this.L = L;
+		this.map = null;
+		this.markers = null;
+		this.element = element;
+	}
+
+	_createClass(Map, [{
+		key: 'createMap',
+		value: function createMap(lat, lng) {
+			var _this = this;
+
+			var zoom = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 1;
+			var shops = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : [];
+
+			this.map = this.L.map(this.element).setView([lat, lng], zoom);
+
+			this.L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png').addTo(this.map);
+
+			// Notre cluster
+			this.markers = this.L.markerClusterGroup();
+
+			shops.forEach(function (shop) {
+				_this.addMarker(shop.latitude, shop.longitude, {
+					title: shop.name
+				});
+			});
+		}
+	}, {
+		key: 'addMarker',
+		value: function addMarker(lat, lng, options) {
+			this.markers.addLayer(this.L.marker([lat, lng], options));
+			// On affiche le cluster
+			this.map.addLayer(this.markers);
+		}
+	}]);
+
+	return Map;
+}();
+
+/* harmony default export */ __webpack_exports__["a"] = (Map);
 
 /***/ })
 /******/ ]);

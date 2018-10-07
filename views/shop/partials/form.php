@@ -62,10 +62,10 @@ $action = ($shop && $shop->id) ? '/shop/edit?id=' . $shop->id : '/shop/create';
                 <select name="category" id="categories" class="form-control">
                     <option value="">Sélectionnez la catégorie</option>
                   <?php foreach ($categories as $category): ?>
-                      <option value="<?= $category->id ?>" <?= ($category->id === $shop->category->id) ? 'selected' : '' ?>><?= $category->name ?></option>
+                      <option value="<?= $category->id ?>" <?= $shop->category && ($category->id === $shop->category->id) ? 'selected' : '' ?>><?= $category->name ?></option>
                   <?php endforeach; ?>
                 </select>
-            </div>  
+            </div>
             <div class="checkbox">
                 <label>
                     <input type="hidden" name="enable" value="0">

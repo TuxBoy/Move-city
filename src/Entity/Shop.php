@@ -58,6 +58,12 @@ class Shop extends Entity
 	public $enable;
 
   /**
+   * @link belongsTo
+   * @var Category
+   */
+	public $category;
+
+  /**
 	 * A shop is represented by its address
 	 *
    * @return string

@@ -2,7 +2,7 @@
 
 	<div class="container">
 		<h1>Ajouter un commerce</h1>
-		<?= $renderer->render('shop.partials.form', ['shop' => $shop]) ?>
+		<?= $renderer->render('shop.partials.form', ['shop' => $shop, 'categories' => $categories]) ?>
 	</div>
 
 <?= $renderer->render('footer') ?>

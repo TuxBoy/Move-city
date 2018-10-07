@@ -3,6 +3,7 @@ namespace App\Controller;
 
 use App\Entity\Shop;
 use App\Service\GeocoderService;
+use App\Table\CategoryTable;
 use App\Table\ShopTable;
 use Core\PhpRenderer;
 use Http\Discovery\Exception\NotFoundException;
@@ -58,10 +59,12 @@ class ShopController
   /**
    * @param Request $request
    * @param GeocoderService $geocoderService
+   * @param CategoryTable $categoryTable
    * @return string
-   * @throws \Exception
+   * @throws \Doctrine\DBAL\DBALException
+   * @throws \ReflectionException
    */
-	public function create(Request $request, GeocoderService $geocoderService)
+	public function create(Request $request, GeocoderService $geocoderService, CategoryTable $categoryTable)
 	{
     if ($request->getMethod() === 'POST') {
       $shop = new Shop($request->request->all());
@@ -73,16 +76,22 @@ class ShopController
 			$this->shopTable->save($shop);
 			return new RedirectResponse('/shop');
 		}
-		return $this->renderer->render('shop.create', ['shop' => new Shop()]);
+		return $this->renderer->render('shop.create', [
+		  'shop'       => new Shop(),
+      'categories' => $categoryTable->getAll()
+    ]);
 	}
 
   /**
    * @param int $id
    * @param Request $request
+   * @param CategoryTable $categoryTable
    * @return string
-   * @throws \Exception
+   * @throws \Doctrine\DBAL\DBALException
+   * @throws \PhpDocReader\AnnotationException
+   * @throws \ReflectionException
    */
-	public function edit(int $id, Request $request)
+	public function edit(int $id, Request $request, CategoryTable $categoryTable)
   {
     $shop = $this->shopTable->get($id);
 		if ($request->getMethod() === 'POST') {
@@ -90,7 +99,8 @@ class ShopController
       $this->shopTable->save($shop);
       return new RedirectResponse('/shop');
     }
-    return $this->renderer->render('shop.edit', compact('shop'));
+    $categories = $categoryTable->getAll();
+    return $this->renderer->render('shop.edit', compact('shop', 'categories'));
   }
 
 	/**

@@ -164,7 +164,7 @@ abstract class Table
         Annotation::of(get_class($entity), $property->getName())->hasAnnotation(AnnotationsName::P_LINK) &&
         Annotation::of(get_class($entity), $property->getName())->getAnnotation('link')->getValue() === 'belongsTo'
       ) {
-        $result['category_id'] = $property->getValue($entity);
+        $result[$property->getName() . '_id'] = $property->getValue($entity);
       }
       elseif (!Annotation::of($class, $property->getName())->hasAnnotation(AnnotationsName::P_LINK)) {
         $result[$property->getName()] = $property->getValue($entity);

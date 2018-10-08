@@ -95,5 +95,13 @@ class Shop extends Entity
     return $this;
   }
 
+	/**
+	 * @return string Display "vide" if not category
+	 */
+  public function getCategoryName(): string
+	{
+		return $this->category ? $this->category->name : 'vide';
+	}
+
 
 }

@@ -56,14 +56,15 @@ class ShopController
 		return $this->renderer->render('shop.index', ['shops' => $this->shopTable->getAll()]);
 	}
 
-  /**
-   * @param Request $request
-   * @param GeocoderService $geocoderService
-   * @param CategoryTable $categoryTable
-   * @return string
-   * @throws \Doctrine\DBAL\DBALException
-   * @throws \ReflectionException
-   */
+	/**
+	 * @param Request         $request
+	 * @param GeocoderService $geocoderService
+	 * @param CategoryTable   $categoryTable
+	 * @return string
+	 * @throws \Doctrine\DBAL\DBALException
+	 * @throws \ReflectionException|\Exception
+	 * @throws \PhpDocReader\AnnotationException
+	 */
 	public function create(Request $request, GeocoderService $geocoderService, CategoryTable $categoryTable)
 	{
     if ($request->getMethod() === 'POST') {
@@ -89,10 +90,11 @@ class ShopController
    * @return string
    * @throws \Doctrine\DBAL\DBALException
    * @throws \PhpDocReader\AnnotationException
-   * @throws \ReflectionException
+   * @throws \ReflectionException|\Exception
    */
 	public function edit(int $id, Request $request, CategoryTable $categoryTable)
   {
+  	/** @var $shop Shop */
     $shop = $this->shopTable->get($id);
 		if ($request->getMethod() === 'POST') {
 			$shop->set($request->request->all());

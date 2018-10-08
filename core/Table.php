@@ -147,7 +147,7 @@ abstract class Table
    * @param Entity $entity
    * @return array
    * @throws ReflectionException
-   * @throws \PhpDocReader\AnnotationException
+   * @throws \PhpDocReader\AnnotationException|\Exception
    */
   private function objectToArray(Entity $entity): array
   {

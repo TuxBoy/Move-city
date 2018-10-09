@@ -1,4 +1,4 @@
-<?= $renderer->render('header') ?>
+<?= $renderer->render('admin.header') ?>
 
 <div class="container">
 	<h1>Tous les commerces</h1>
@@ -23,7 +23,7 @@
 				<td><?= $shop->enable ? '<span class="label label-success">oui</span>' : '<span class="label label-danger">non</span>' ?></td>
 				<td>
 					<a href="/shop/edit?id=<?= $shop->id ?>" class="btn btn-success">Editer</a>
-					<form action="/shop/delete?id=<?= $shop->id ?>" method="post" class="form-delete">
+					<form action="/shop/delete?id=<?= $shop->id ?>" method="post" class="form-delete" style="display: inline-block;">
 						<button class="btn btn-danger">Supprimer</button>
 					</form>
 				</td>
@@ -33,4 +33,4 @@
 	</table>
 </div>
 
-<?= $renderer->render('footer') ?>
+<?= $renderer->render('admin.footer') ?>

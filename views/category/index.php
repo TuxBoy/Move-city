@@ -1,4 +1,4 @@
-<?= $renderer->render('header') ?>
+<?= $renderer->render('admin.header') ?>
 
 <div class="container">
   <h1>Toutes les catégories</h1>
@@ -20,8 +20,8 @@
         <td><a href="/category/edit?id=<?= $category->id ?>"><?= $category->name ?></a></td>
         <td><?= $category->slug ?></td>
         <td>
-          <a href="/category/edit?id=<?= $category->id ?>" class="btn btn-success">Editer</a>
-          <form action="/category/delete?id=<?= $category->id ?>" method="post" class="form-delete">
+          <a href="/category/edit?id=<?= $category->id ?>" class="btn btn-success"><i class="far fa-edit"> Editer</a>
+          <form action="/category/delete?id=<?= $category->id ?>" method="post" class="form-delete" style="display: inline-block;">
             <button class="btn btn-danger">Supprimer</button>
           </form>
         </td>
@@ -31,4 +31,4 @@
   </table>
 </div>
 
-<?= $renderer->render('footer') ?>
+<?= $renderer->render('admin.footer') ?>

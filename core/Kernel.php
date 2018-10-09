@@ -44,7 +44,7 @@ class Kernel
 	 */
 	public function handler(Request $request, Response $response): Response
 	{
-    $clear_request   = $request->getPathInfo();
+    $clear_request = $request->getPathInfo();
     if ($clear_request[-1] === '/') {
         $clear_request = substr($clear_request, 0, -1);
     }

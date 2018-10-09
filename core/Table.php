@@ -63,8 +63,23 @@ abstract class Table
       ->from(static::$table_name)
       ->orderBy('id', 'DESC')
       ->execute()
-      ->fetchAll(FetchMode::CUSTOM_OBJECT,static::$entity);
+      ->fetchAll(FetchMode::CUSTOM_OBJECT, static::$entity);
   }
+
+	/**
+	 * @param int $limit
+	 * @return object[]|Entity[] The recent item by created date with limit
+	 */
+	public function getRecentShops(int $limit = 15): array
+	{
+		return $this->connection->createQueryBuilder()
+			->select('*')
+			->from(static::$table_name)
+			->orderBy('created_at', 'DESC')
+			->setMaxResults($limit)
+			->execute()
+			->fetchAll(FetchMode::CUSTOM_OBJECT, static::$entity);
+	}
 
   /**
    * @param int $id
@@ -162,10 +177,16 @@ abstract class Table
       }
       if (
         Annotation::of(get_class($entity), $property->getName())->hasAnnotation(AnnotationsName::P_LINK) &&
-        Annotation::of(get_class($entity), $property->getName())->getAnnotation('link')->getValue() === 'belongsTo'
+        Annotation::of(get_class($entity), $property->getName())->getAnnotation(AnnotationsName::P_LINK)->getValue() === 'belongsTo'
       ) {
         $result[$property->getName() . '_id'] = $property->getValue($entity);
       }
+      if (in_array($property->getName(), ['createdAt', 'updatedAt'])) {
+      	// Transform createdAt => created_at
+      	$property_to_key = strtolower(Str::lParse($property->getName(), 'At')) . '_at';
+				$value = $property->getValue($entity) ? $property->getValue($entity) : (new \DateTime())->format('Y-m-d H:i:s');
+      	$result[$property_to_key] = $value;
+			}
       elseif (!Annotation::of($class, $property->getName())->hasAnnotation(AnnotationsName::P_LINK)) {
         $result[$property->getName()] = $property->getValue($entity);
       }

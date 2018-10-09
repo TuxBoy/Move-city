@@ -2,9 +2,14 @@
 namespace App\Entity;
 
 use Core\Entity;
+use SDAM\Traits\HasTimestamp;
 
+/**
+ * Class Shop
+ */
 class Shop extends Entity
 {
+	use HasTimestamp;
 
   /**
    * @var int

@@ -3,6 +3,7 @@ namespace App\Entity;
 
 use Core\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use SDAM\Traits\HasTimestamp;
 
 /**
@@ -106,5 +107,25 @@ class Shop extends Entity
 
     return $this;
   }
+
+	/**
+	 * @param Category|null ...$categories
+	 */
+  public function addCategory(?Category ...$categories): void
+	{
+		foreach ($categories as $category) {
+			if (!$this->categories->contains($category)) {
+				$this->categories->add($category);
+			}
+		}
+	}
+
+	/**
+	 * @return Collection
+	 */
+	public function getCategories(): Collection
+	{
+		return $this->categories;
+	}
 
 }

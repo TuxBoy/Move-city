@@ -2,6 +2,7 @@
 namespace App\Entity;
 
 use Core\Entity;
+use Doctrine\Common\Collections\ArrayCollection;
 use SDAM\Traits\HasTimestamp;
 
 /**
@@ -63,19 +64,25 @@ class Shop extends Entity
 	public $enable;
 
   /**
-   * @link belongsTo
-   * @var Category
+   * @link belongsToMany
+   * @var Category[]
    */
-	public $category;
+	public $categories;
 
-  /**
+	public function __construct(array $request = [])
+	{
+		parent::__construct($request);
+		$this->categories = new ArrayCollection();
+	}
+
+	/**
 	 * A shop is represented by its address
 	 *
    * @return string
    */
 	public function __toString(): string
   {
-    return $this->street. ' ' . $this->postal_code . ' ' . $this->city . ' ' . $this->country;
+    return $this->street . ' ' . $this->postal_code . ' ' . $this->city . ' ' . $this->country;
   }
 
   /**
@@ -99,14 +106,5 @@ class Shop extends Entity
 
     return $this;
   }
-
-	/**
-	 * @return string Display "vide" if not category
-	 */
-  public function getCategoryName(): string
-	{
-		return $this->category ? $this->category->name : 'vide';
-	}
-
 
 }

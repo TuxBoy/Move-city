@@ -1,6 +1,9 @@
 <?php
 namespace Core;
 
+use SDAM\Annotation\Annotation;
+use SDAM\Annotation\AnnotationsName;
+
 abstract class Entity
 {
 

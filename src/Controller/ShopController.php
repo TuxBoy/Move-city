@@ -68,6 +68,7 @@ class ShopController
 	public function create(Request $request, GeocoderService $geocoderService, CategoryTable $categoryTable)
 	{
     if ($request->getMethod() === 'POST') {
+    	dd($request->request->all());
       $shop = new Shop($request->request->all());
 		  if ($addresses_found = $geocoderService->addressToCoordinate((string) $shop)->first()) {
         $shop

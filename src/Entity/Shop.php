@@ -128,4 +128,14 @@ class Shop extends Entity
 		return $this->categories;
 	}
 
+	/**
+	 * @return string List of names with ',' separator (category_name1, category_name2 etc.)
+	 */
+	public function getListCategoryName(): string
+	{
+		return join(
+			', ', $this->getCategories()->map(function ($category) { return $category->name; })->getValues()
+		);
+	}
+
 }

@@ -68,8 +68,14 @@ class ShopController
 	public function create(Request $request, GeocoderService $geocoderService, CategoryTable $categoryTable)
 	{
     if ($request->getMethod() === 'POST') {
-    	dd($request->request->all());
-      $shop = new Shop($request->request->all());
+			$shop       = new Shop($request->request->all());
+			// TODO Généraliser le code afin d'hydrater un collection d'objet  dans une entités
+			$categories = array_map(function ($category_id) use ($categoryTable) {
+				return $categoryTable->get($category_id);
+			}, $request->request->get('categories'));
+			foreach ($categories as $category) {
+				$shop->addCategory($category);
+			}
 		  if ($addresses_found = $geocoderService->addressToCoordinate((string) $shop)->first()) {
         $shop
           ->setLongitude($addresses_found->getCoordinates()->getLongitude())
@@ -131,7 +137,8 @@ class ShopController
 	 */
 	public function show(int $id): string
 	{
-		return $this->renderer->render('shop.show', ['shop' => $this->shopTable->get($id)]);
+		$shop = $this->shopTable->getShopWithCategories($id);
+		return $this->renderer->render('shop.show', compact('shop'));
 	}
 
 }

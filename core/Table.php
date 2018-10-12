@@ -1,6 +1,7 @@
 <?php
 namespace Core;
 
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\FetchMode;
 use Doctrine\DBAL\Statement;
@@ -90,8 +91,8 @@ abstract class Table
   {
     $record = $this->connection->createQueryBuilder()
       ->select('*')
-      ->from(static::$table_name, 's')
-      ->where('s.id = ?')
+      ->from(static::$table_name, 't')
+      ->where('t.id = ?')
       ->setParameter(0, $id)
       ->execute()
       ->fetch();
@@ -107,13 +108,16 @@ abstract class Table
    * @param array|Entity $data
    * @return Statement|int
    * @throws ReflectionException|\Doctrine\DBAL\DBALException
-   * @throws \PhpDocReader\AnnotationException
+   * @throws \PhpDocReader\AnnotationException|\Exception
    */
   public function save($data): int
   {
+  	$relations      = [];
+		$relation_table = null;
     if (is_object($data)) {
       $data = $this->objectToArray($data);
     }
+    $this->prepareForeignData($data);
     $update         = isset($data['id']) && !empty($data['id']);
     $prepare_values = [];
     // Build values for the prepare query ('key' => '?' ..)
@@ -129,13 +133,44 @@ abstract class Table
       }
       return $this->connection->update(static::$table_name, $data, $identifier);
     }
-    return $this->connection
-      ->createQueryBuilder()
-      ->insert(static::$table_name)
-      ->values($prepare_values)
-      ->setParameters(array_values($data))
-      ->execute();
+
+		$record = $this->connection
+			->createQueryBuilder()
+			->insert(static::$table_name)
+			->values($prepare_values)
+			->setParameters(array_values($data))
+			->execute();
+
+    // Manage relation insert in the foreign table
+    if (($last_record_id = $this->connection->lastInsertId()) && $relation_table && !empty($relations)) {
+    	$relations_records = $relations->getValues();
+			foreach ($relations_records as $relations_record) {
+				$foreign_key            = $this->entityToForeignKey($relations_record);
+				$base_key               = $this->entityToForeignKey(static::$entity);
+				$prepare_foreign_values = [$foreign_key => ':' . $foreign_key, $base_key => ':' . $base_key];
+				$this->connection->createQueryBuilder()
+					->insert($relation_table)
+					->values($prepare_foreign_values)
+					->setParameters([':' . $foreign_key => $relations_record->id, ':' . $base_key => $last_record_id])
+					->execute();
+    	}
+		}
+
+    return $record;
   }
+
+	/**
+	 * @param Entity|string $entity_name
+	 * @return string The foreign key based entity class name (App\Entity\Post => post_id)
+	 */
+  private function entityToForeignKey($entity_name): string
+	{
+		if (is_object($entity_name)) {
+			$entity_name = get_class($entity_name);
+		}
+		$parts = explode('\\', $entity_name);
+		return strtolower(end($parts)) . '_id';
+	}
 
   /**
    * @param array $record
@@ -169,6 +204,7 @@ abstract class Table
     $result = [];
     $class  = new ReflectionClass(get_class($entity));
     foreach ($class->getProperties() as $property) {
+    	$name = $property->getName();
       if ($property->getValue($entity) === '1') {
         $property->setValue($entity, 1);
       }
@@ -176,19 +212,25 @@ abstract class Table
         $property->setValue($entity, 0);
       }
       if (
-        Annotation::of(get_class($entity), $property->getName())->hasAnnotation(AnnotationsName::P_LINK) &&
-        Annotation::of(get_class($entity), $property->getName())->getAnnotation(AnnotationsName::P_LINK)->getValue() === 'belongsTo'
+        Annotation::of($class, $name)->hasAnnotation(AnnotationsName::P_LINK) &&
+        Annotation::of($class, $name)->getAnnotation(AnnotationsName::P_LINK)->getValue() === 'belongsTo'
       ) {
-        $result[$property->getName() . '_id'] = $property->getValue($entity);
+        $result[$name . '_id'] = $property->getValue($entity);
       }
-      if (in_array($property->getName(), ['createdAt', 'updatedAt'])) {
+			if (
+				Annotation::of($class, $name)->hasAnnotation(AnnotationsName::P_LINK) &&
+				Annotation::of($class, $name)->getAnnotation(AnnotationsName::P_LINK)->getValue() === 'belongsToMany'
+			) {
+				$result[$name] = $property->getValue($entity);
+			}
+      if (in_array($name, ['createdAt', 'updatedAt'])) {
       	// Transform createdAt => created_at
-      	$property_to_key = strtolower(Str::lParse($property->getName(), 'At')) . '_at';
+      	$property_to_key = strtolower(Str::lParse($name, 'At')) . '_at';
 				$value = $property->getValue($entity) ? $property->getValue($entity) : (new \DateTime())->format('Y-m-d H:i:s');
       	$result[$property_to_key] = $value;
 			}
-      elseif (!Annotation::of($class, $property->getName())->hasAnnotation(AnnotationsName::P_LINK)) {
-        $result[$property->getName()] = $property->getValue($entity);
+      elseif (!Annotation::of($class, $name)->hasAnnotation(AnnotationsName::P_LINK)) {
+        $result[$name] = $property->getValue($entity);
       }
     }
     return $result;
@@ -203,5 +245,25 @@ abstract class Table
   {
     return $this->connection->delete(static::$table_name, ['id' => $id], ['id' => Type::INTEGER]);
   }
+
+	/**
+	 * @param array $data
+	 * @throws \Exception
+	 */
+	private function prepareForeignData(array &$data): void
+	{
+
+		foreach ($data as $key => $value) {
+			if ($value instanceof Collection) {
+				/** @var $relations Collection */
+				$relations      = $data[$key];
+				$relation_table = static::$table_name . '_' . $key;
+				if (!$this->connection->getSchemaManager()->tablesExist([$relation_table])) {
+					throw new \Exception("Relation table $relation_table does not exist in the database");
+				}
+				unset($data[$key]);
+			}
+		}
+	}
 
 }

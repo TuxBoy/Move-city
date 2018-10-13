@@ -1,6 +1,6 @@
 <?= $renderer->render('admin.header') ?>
 
-<div class="container">
+<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
 	<h1>Tous les commerces</h1>
 
 	<a href="/shop/create" class="btn btn-primary">Ajouter un commerce</a>

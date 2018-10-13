@@ -1,6 +1,6 @@
 <?= $renderer->render('admin.header') ?>
 
-<div class="container">
+<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
   <h1>Toutes les catégories</h1>
 
   <a href="/category/add" class="btn btn-primary">Ajouter une catégorie</a>

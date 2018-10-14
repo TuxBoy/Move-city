@@ -104,7 +104,14 @@ class ShopController
   	/** @var $shop Shop */
     $shop = $this->shopTable->getShopWithCategories($id);
 		if ($request->getMethod() === 'POST') {
-			$shop->set($request->request->all());
+      $shop->categories->clear();
+      $shop->set($request->request->all());
+      $categories = array_map(function ($category_id) use ($categoryTable) {
+        return $categoryTable->get($category_id);
+      }, $request->request->get('categories'));
+      foreach ($categories as $category) {
+        $shop->addCategory($category);
+      }
       $this->shopTable->save($shop);
       return new RedirectResponse('/shop');
     }

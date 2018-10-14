@@ -1,6 +1,7 @@
 <?php
 namespace Core;
 
+use Doctrine\Common\Collections\Collection;
 use SDAM\Annotation\Annotation;
 use SDAM\Annotation\AnnotationsName;
 
@@ -24,7 +25,9 @@ abstract class Entity
   {
     foreach ($request as $property => $value) {
       if (property_exists(get_called_class(), $property)) {
-        $this->$property = $value;
+        if (!$this->$property instanceof Collection) {
+          $this->$property = $value;
+        }
       }
     }
   }

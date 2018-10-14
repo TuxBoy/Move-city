@@ -112,12 +112,10 @@ abstract class Table
    */
   public function save($data): int
   {
-  	$relations      = [];
-		$relation_table = null;
     if (is_object($data)) {
       $data = $this->objectToArray($data);
     }
-    $this->prepareForeignData($data);
+    list($relations, $relation_table) = $this->prepareForeignData($data);
     $update         = isset($data['id']) && !empty($data['id']);
     $prepare_values = [];
     // Build values for the prepare query ('key' => '?' ..)
@@ -131,6 +129,11 @@ abstract class Table
         $identifier['id'] = (int) $data['id'];
         unset($data['id']);
       }
+
+      $base_id = $this->entityToForeignKey(static::$entity);
+      // Clean all relations data for the base id
+      $this->connection->delete($relation_table, [$base_id => $identifier['id']]);
+      $this->insertBelongsToManyRelation($relations, $relation_table, $identifier['id']);
       return $this->connection->update(static::$table_name, $data, $identifier);
     }
 
@@ -141,20 +144,7 @@ abstract class Table
 			->setParameters(array_values($data))
 			->execute();
 
-    // Manage relation insert in the foreign table
-    if (($last_record_id = $this->connection->lastInsertId()) && $relation_table && !empty($relations)) {
-    	$relations_records = $relations->getValues();
-			foreach ($relations_records as $relations_record) {
-				$foreign_key            = $this->entityToForeignKey($relations_record);
-				$base_key               = $this->entityToForeignKey(static::$entity);
-				$prepare_foreign_values = [$foreign_key => ':' . $foreign_key, $base_key => ':' . $base_key];
-				$this->connection->createQueryBuilder()
-					->insert($relation_table)
-					->values($prepare_foreign_values)
-					->setParameters([':' . $foreign_key => $relations_record->id, ':' . $base_key => $last_record_id])
-					->execute();
-    	}
-		}
+    $this->insertBelongsToManyRelation($relations, $relation_table);
 
     return $record;
   }
@@ -246,13 +236,15 @@ abstract class Table
     return $this->connection->delete(static::$table_name, ['id' => $id], ['id' => Type::INTEGER]);
   }
 
-	/**
-	 * @param array $data
-	 * @throws \Exception
-	 */
-	private function prepareForeignData(array &$data): void
+  /**
+   * @param array $data
+   * @return string[]
+   * @throws \Exception
+   */
+	private function prepareForeignData(array &$data): array
 	{
-
+    $relations      = null;
+    $relation_table = null;
 		foreach ($data as $key => $value) {
 			if ($value instanceof Collection) {
 				/** @var $relations Collection */
@@ -264,6 +256,31 @@ abstract class Table
 				unset($data[$key]);
 			}
 		}
+		return [$relations, $relation_table];
 	}
+
+  /**
+   * @param Collection $relations
+   * @param string $relation_table
+   * @param int|null $record_id
+   */
+  private function insertBelongsToManyRelation(Collection $relations, string $relation_table, ?int $record_id = null)
+  {
+    $origin_id = $record_id ? $record_id : $this->connection->lastInsertId();
+    // Manage relation insert in the foreign table
+    if ($relation_table && !empty($relations)) {
+      $relations_records = $relations->getValues();
+      foreach ($relations_records as $relations_record) {
+        $foreign_key            = $this->entityToForeignKey($relations_record);
+        $base_key               = $this->entityToForeignKey(static::$entity);
+        $prepare_foreign_values = [$foreign_key => ':' . $foreign_key, $base_key => ':' . $base_key];
+        $this->connection->createQueryBuilder()
+          ->insert($relation_table)
+          ->values($prepare_foreign_values)
+          ->setParameters([':' . $foreign_key => $relations_record->id, ':' . $base_key => $origin_id])
+          ->execute();
+      }
+    }
+  }
 
 }

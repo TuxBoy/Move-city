@@ -130,10 +130,12 @@ abstract class Table
         unset($data['id']);
       }
 
-      $base_id = $this->entityToForeignKey(static::$entity);
-      // Clean all relations data for the base id
-      $this->connection->delete($relation_table, [$base_id => $identifier['id']]);
-      $this->insertBelongsToManyRelation($relations, $relation_table, $identifier['id']);
+      if ($relations) {
+        $base_id = $this->entityToForeignKey(static::$entity);
+        // Clean all relations data for the base id
+        $this->connection->delete($relation_table, [$base_id => $identifier['id']]);
+        $this->insertBelongsToManyRelation($relations, $relation_table, $identifier['id']);
+      }
       return $this->connection->update(static::$table_name, $data, $identifier);
     }
 
@@ -144,7 +146,9 @@ abstract class Table
 			->setParameters(array_values($data))
 			->execute();
 
-    $this->insertBelongsToManyRelation($relations, $relation_table);
+    if ($relations && $relation_table) {
+      $this->insertBelongsToManyRelation($relations, $relation_table);
+    }
 
     return $record;
   }

@@ -36,6 +36,7 @@ class CategoryController
   {
     if ($request->getMethod() === 'POST') {
       $category = new Category($request->request->all());
+      $category->setSlug();
       $categoryTable->save($category);
       return new RedirectResponse('/category');
     }
@@ -57,6 +58,7 @@ class CategoryController
     $category = $categoryTable->get($id);
     if ($request->getMethod() === 'POST') {
       $category->set($request->request->all());
+      $category->setSlug();
       $categoryTable->save($category);
       return new RedirectResponse('/category');
     }

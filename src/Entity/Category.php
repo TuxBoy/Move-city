@@ -2,6 +2,7 @@
 namespace App\Entity;
 
 use Core\Entity;
+use Core\Str;
 use SDAM\Traits\HasCreatedAt;
 
 /**
@@ -25,5 +26,20 @@ class Category extends Entity
    * @var string
    */
   public $slug;
+
+  /**
+   * @param string|null $value
+   * @return $this
+   */
+  public function setSlug(?string $value = null): self
+  {
+    if (is_null($value)) {
+      $this->slug = Str::slugify($this->name);
+    }
+    else {
+      $this->slug = Str::slugify($value);
+    }
+    return $this;
+  }
 
 }

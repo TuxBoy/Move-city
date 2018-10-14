@@ -1,9 +1,10 @@
 <?php
 
 // Utilities constants
-define('APP_ROOT', dirname(__DIR__));
-define('SL',       DIRECTORY_SEPARATOR);
-define('DOT',      '.');
+define('APP_ROOT',    dirname(__DIR__));
+define('SL',          DIRECTORY_SEPARATOR);
+define('DOT',         '.');
+define('PUBLIC_PATH', APP_ROOT . '/public/');
 
 require APP_ROOT . '/vendor/autoload.php';
 

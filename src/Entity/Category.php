@@ -28,6 +28,19 @@ class Category extends Entity
   public $slug;
 
   /**
+   * @var string
+   */
+  public $image;
+
+  /**
+   * @return string
+   */
+  public function displayImage(): string
+  {
+    return $this->image ? '<img width="200" src="/uploads/' . $this->image .'" alt="Category image">' : '';
+  }
+
+  /**
    * @param string|null $value
    * @return $this
    */

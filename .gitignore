@@ -3,5 +3,6 @@
 /.idea
 
 /node_modules
+/public/uploads
 /vendor
 loc.php

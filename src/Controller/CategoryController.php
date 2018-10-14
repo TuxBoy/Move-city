@@ -4,6 +4,7 @@ namespace App\Controller;
 use App\Entity\Category;
 use App\Table\CategoryTable;
 use Core\PhpRenderer;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -37,10 +38,25 @@ class CategoryController
     if ($request->getMethod() === 'POST') {
       $category = new Category($request->request->all());
       $category->setSlug();
+      if ($request->files->has('image')) {
+        $category->image = $this->upload($request->files->get('image'), $category);
+      }
       $categoryTable->save($category);
       return new RedirectResponse('/category');
     }
     return $renderer->render('category.add', ['category' => new Category]);
+  }
+
+  /**
+   * @param UploadedFile $file
+   * @param Category $category
+   * @return string
+   */
+  private function upload(UploadedFile $file, Category $category): string
+  {
+    $image_name = $category->name . DOT . $file->getClientOriginalExtension();
+    $file->move(PUBLIC_PATH . 'uploads', $image_name);
+    return $image_name;
   }
 
   /**
@@ -59,6 +75,9 @@ class CategoryController
     if ($request->getMethod() === 'POST') {
       $category->set($request->request->all());
       $category->setSlug();
+      if ($request->files->has('image') && $request->files->get('image')) {
+        $category->image = $this->upload($request->files->get('image'), $category);
+      }
       $categoryTable->save($category);
       return new RedirectResponse('/category');
     }

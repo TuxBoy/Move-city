@@ -2,7 +2,7 @@
 <?php
 $action = ($category && $category->id) ? '/category/edit?id=' . $category->id : '/category/add';
 ?>
-<form action="<?= $action ?>" method="post">
+<form action="<?= $action ?>" method="post" enctype="multipart/form-data">
   <div class="panel panel-default">
     <div class="panel-heading">
       Informations :
@@ -15,6 +15,10 @@ $action = ($category && $category->id) ? '/category/edit?id=' . $category->id : 
       <div class="form-group">
         <label for="name">URL :</label>
         <input type="text" name="slug" class="form-control" value="<?= $category->slug ?>">
+      </div>
+      <div class="form-group">
+            <div class="image" style="width: 200px; height: 200px"><?= $category->displayImage(); ?></div>
+          <input type="file" name="image" id="image">
       </div>
     <div class="panel-footer">
       <button class="btn btn-primary" type="submit">Enregistrer</button>

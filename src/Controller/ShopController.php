@@ -102,7 +102,7 @@ class ShopController
 	public function edit(int $id, Request $request, CategoryTable $categoryTable)
   {
   	/** @var $shop Shop */
-    $shop = $this->shopTable->get($id);
+    $shop = $this->shopTable->getShopWithCategories($id);
 		if ($request->getMethod() === 'POST') {
 			$shop->set($request->request->all());
       $this->shopTable->save($shop);

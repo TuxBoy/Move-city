@@ -138,4 +138,16 @@ class Shop extends Entity
 		);
 	}
 
+  /**
+   * @param Category $category
+   * @return string
+   */
+	public function categoryIsSelected(Category $category): string
+  {
+    $exists = $this->getCategories()->exists(function ($key, $element) use ($category) {
+      return $element->id === $category->id;
+    });
+    return $exists ? 'selected' : '';
+  }
+
 }

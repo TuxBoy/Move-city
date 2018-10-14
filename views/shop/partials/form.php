@@ -59,10 +59,10 @@ $action = ($shop && $shop->id) ? '/shop/edit?id=' . $shop->id : '/shop/create';
                 <textarea name="description" id="description" class="form-control"><?= $shop->description ?></textarea>
             </div>
             <div class="form-group">
+                <label for="categories">Catégorie</label>
                 <select name="categories[]" id="categories" class="form-control" multiple>
-                    <option value="">Sélectionnez la catégorie</option>
                   <?php foreach ($categories as $category): ?>
-                      <option value="<?= $category->id ?>"><?= $category->name ?></option>
+                      <option value="<?= $category->id ?>" <?= $shop->categoryIsSelected($category) ?>><?= $category->name ?></option>
                   <?php endforeach; ?>
                 </select>
             </div>

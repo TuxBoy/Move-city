@@ -23,8 +23,8 @@ class ShopTable extends Table
 	public function getEnableShops(): array
 	{
 		return $this->connection->createQueryBuilder()
-			->select(static::$table_name)
-			->from('shops', 's')
+			->select('*')
+			->from(static::$table_name, 's')
 			->orderBy('id', 'DESC')
 			->where('s.enable=1')
 			->execute()

@@ -19,7 +19,7 @@ class CategoryTable extends Table
   public function findByShop(int $shop_id): array
 	{
 		return $this->connection->createQueryBuilder()
-			->select('*')
+			->select('c.*')
 			->from(static::$table_name, 'c')
 			->leftJoin('c', 'shops_categories', 'sc', 'c.id = sc.category_id')
 			->where('sc.shop_id = ?')

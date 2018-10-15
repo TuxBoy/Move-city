@@ -8,10 +8,10 @@ const map_params = {
 	lng    : 2.9846608,
 	zoom : 6
 }
-const map = document.querySelector('.macarte')
+const map = document.querySelector('#macarte')
 if (map) {
-    axios.get('/shop/api').then(response => {
-        let shops = response.data
-        new Map(L, 'macarte').createMap(map_params.lat, map_params.lng, map_params.zoom, shops)
-    }).catch(error => console.log(error))
+	axios.get('/shop/api').then(response => {
+		let shops = response.data
+		new Map(L, 'macarte').createMap(map_params.lat, map_params.lng, map_params.zoom, shops)
+	}).catch(error => console.log(error))
 }

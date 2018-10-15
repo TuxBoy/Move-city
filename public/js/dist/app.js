@@ -772,12 +772,15 @@ var map_params = {
 	lng: 2.9846608,
 	zoom: 6
 };
-__WEBPACK_IMPORTED_MODULE_0_axios___default.a.get('/shop/api').then(function (response) {
-	var shops = response.data;
-	new __WEBPACK_IMPORTED_MODULE_2__map_Map__["a" /* default */](L, 'macarte').createMap(map_params.lat, map_params.lng, map_params.zoom, shops);
-}).catch(function (error) {
-	return console.log(error);
-});
+var map = document.querySelector('#macarte');
+if (map) {
+	__WEBPACK_IMPORTED_MODULE_0_axios___default.a.get('/shop/api').then(function (response) {
+		var shops = response.data;
+		new __WEBPACK_IMPORTED_MODULE_2__map_Map__["a" /* default */](L, 'macarte').createMap(map_params.lat, map_params.lng, map_params.zoom, shops);
+	}).catch(function (error) {
+		return console.log(error);
+	});
+}
 
 /***/ }),
 /* 9 */
@@ -1970,7 +1973,7 @@ var Map = function () {
 	}, {
 		key: 'addMarker',
 		value: function addMarker(data, options) {
-			var contentPopupText = data.description + (' <a href="/shop/show?id=' + data.id + '">En savoir plus</a>');
+			var contentPopupText = data.name + (' <a href="/shop/show?id=' + data.id + '">En savoir plus</a>');
 			var popupContent = this.L.popup().setLatLng([data.latitude, data.longitude]).setContent(contentPopupText);
 			this.markers.addLayer(this.L.marker([data.latitude, data.longitude], options).bindPopup(popupContent).openPopup());
 			// On affiche le cluster

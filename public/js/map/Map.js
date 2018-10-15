@@ -40,7 +40,7 @@ export default class Map {
 	 * @param options
 	 */
 	addMarker (data, options) {
-		let contentPopupText = data.title + ` <a href="/shop/show?id=${data.id}">En savoir plus</a>`
+		let contentPopupText = data.name + ` <a href="/shop/show?id=${data.id}">En savoir plus</a>`
 		const popupContent   = this.L.popup().setLatLng([data.latitude, data.longitude]).setContent(contentPopupText)
 		this.markers.addLayer(this.L.marker([data.latitude, data.longitude], options).bindPopup(popupContent).openPopup())
 		// On affiche le cluster

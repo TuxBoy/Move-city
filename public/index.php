@@ -36,6 +36,12 @@ $container->set(\Doctrine\DBAL\Connection::class, function (\Psr\Container\Conta
 	return \Doctrine\DBAL\DriverManager::getConnection($container->get('config.db'));
 });
 
+$container->set(\Core\EventManager\EventManagerInterface::class, function () {
+	$eventManager = new \Core\EventManager\EventManager();
+	$eventManager->attach('entity.delete.image', new \App\EventListener\DeleteImageEventListener);
+	return $eventManager;
+});
+
 // Kernel and Middleware application
 $kernel     = new \Core\Kernel($container);
 $dispatcher = new \Core\Dispatcher;

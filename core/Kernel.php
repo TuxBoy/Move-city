@@ -1,6 +1,7 @@
 <?php
 namespace Core;
 
+use Core\EventManager\EventManagerInterface;
 use Exception;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -29,7 +30,7 @@ class Kernel
 	/**
 	 * Kernel constructor
 	 *
-	 * @param ContainerInterface $container
+	 * @param ContainerInterface    $container
 	 */
 	public function __construct(ContainerInterface $container)
 	{
@@ -37,7 +38,7 @@ class Kernel
 	}
 
 	/**
-	 * @param          $request Request
+	 * @param Request  $request
 	 * @param Response $response
 	 * @return Response
 	 * @throws Exception

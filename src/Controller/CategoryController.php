@@ -2,7 +2,9 @@
 namespace App\Controller;
 
 use App\Entity\Category;
+use App\EventManager\ImageEvent;
 use App\Table\CategoryTable;
+use Core\EventManager\EventManagerInterface;
 use Core\PhpRenderer;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -84,23 +86,27 @@ class CategoryController
     return $renderer->render('category.add', ['category' => $category]);
   }
 
-  /**
-   * @param int $id
-   * @param Request $request
-   * @param CategoryTable $categoryTable
-   * @return RedirectResponse
-   * @throws \Doctrine\DBAL\DBALException
-   * @throws \Doctrine\DBAL\Exception\InvalidArgumentException
-   */
-  public function delete(int $id, Request $request, CategoryTable $categoryTable)
+	/**
+	 * @param int                   $id
+	 * @param Request               $request
+	 * @param CategoryTable         $categoryTable
+	 * @param EventManagerInterface $eventManager
+	 * @return RedirectResponse
+	 * @throws \Doctrine\DBAL\DBALException|\Exception
+	 * @throws \Doctrine\DBAL\Exception\InvalidArgumentException
+	 */
+  public function delete(int $id, Request $request, CategoryTable $categoryTable, EventManagerInterface $eventManager)
   {
     if ($request->getMethod() !== 'POST') {
       throw new \Exception("Not allow resource method");
     }
-    if (!$categoryTable->get($id)) {
+    /** @var $category Category */
+    $category = $categoryTable->get($id);
+    if (!$category) {
       throw new \Exception("Aucune catégorie n'a été trouvé pour cet identifiant");
     }
     $categoryTable->delete($id);
+    $eventManager->trigger(new ImageEvent($category));
     return new RedirectResponse('/category');
   }
 

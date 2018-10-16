@@ -17,7 +17,7 @@ $action = ($category && $category->id) ? '/category/edit?id=' . $category->id : 
         <input type="text" name="slug" class="form-control" value="<?= $category->slug ?>">
       </div>
       <div class="form-group">
-            <div class="image" style="width: 200px; height: 200px"><?= $category->displayImage(); ?></div>
+            <div class="image"><?= $category->displayImage('thumb'); ?></div>
           <input type="file" name="image" id="image">
       </div>
     <div class="panel-footer">

@@ -16,9 +16,11 @@ class DeleteImageEventListener
 	{
 		/** @var $category \App\Entity\Category */
 		$category = $event->getTarget();
-		$image    = PUBLIC_PATH . 'uploads/' . $category->image;
-		if (file_exists($image)) {
-			unlink($image);
+		['filename' => $filename] = pathinfo($category->image);
+		foreach (glob(PUBLIC_PATH . 'uploads/' . $filename . '*') as $image) {
+			if (file_exists($image)) {
+				unlink($image);
+			}
 		}
 	}
 

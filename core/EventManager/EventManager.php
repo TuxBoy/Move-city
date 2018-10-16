@@ -1,6 +1,8 @@
 <?php
 namespace Core\EventManager;
 
+use Psr\Container\ContainerInterface;
+
 class EventManager implements EventManagerInterface
 {
 
@@ -10,14 +12,29 @@ class EventManager implements EventManagerInterface
 	private $listeners = [];
 
 	/**
+	 * @var ContainerInterface
+	 */
+	private $container;
+
+	/**
+	 * EventManager constructor
+	 *
+	 * @param ContainerInterface $container
+	 */
+	public function __construct(ContainerInterface $container)
+	{
+		$this->container = $container;
+	}
+
+	/**
 	 * Attaches a listener to an event
 	 *
 	 * @param string   $event    the event to attach too
-	 * @param callable $callback a callable function
+	 * @param callable|string $callback a callable function
 	 * @param int      $priority the priority at which the $callback executed
 	 * @return EventManagerInterface
 	 */
-	public function attach(string $event, callable $callback, $priority = 0): EventManagerInterface
+	public function attach(string $event, $callback, $priority = 0): EventManagerInterface
 	{
 		$this->listeners[$event][] = [
 			'callback' => $callback,
@@ -61,7 +78,6 @@ class EventManager implements EventManagerInterface
 	 * @param  string|EventInterface $event
 	 * @param  object|string         $target
 	 * @param  array|object          $argv
-	 * @return mixed
 	 */
 	public function trigger($event, $target = null, $argv = [])
 	{
@@ -74,6 +90,10 @@ class EventManager implements EventManagerInterface
 				return $listenerB['priority'] - $listenerA['priority'];
 			});
 			foreach ($listeners as ['callback' => $callback]) {
+				// Used DI for callback resolve
+				if (is_string($callback)) {
+					$callback = $this->container->get($callback);
+				}
 				call_user_func($callback, $event);
 			}
 		}

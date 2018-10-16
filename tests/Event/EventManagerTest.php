@@ -1,11 +1,13 @@
 <?php
-namespace App\Test;
+namespace Test;
 
 use Core\EventManager\EventInterface;
 use Core\EventManager\EventManager;
 use Core\EventManager\EventManagerInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use Psr\Container\ContainerInterface;
+use Test\Event\Fixtures\FooEvent;
 
 /**
  * Class EventManagerTest
@@ -18,15 +20,22 @@ class EventManagerTest extends TestCase
 	 */
 	private $eventManager;
 
+	/**
+	 * @var ContainerInterface|MockObject
+	 */
+	private $container;
+
 	public function setUp()
 	{
-		$this->eventManager = new EventManager;
+		$this->container    = $this->getMockBuilder(ContainerInterface::class)->getMock();
+		$this->eventManager = new EventManager($this->container);
 		parent::setUp();
 	}
 
 	public function tearDown()
 	{
 		$this->eventManager = null;
+		$this->container    = null;
 		parent::tearDown();
 	}
 
@@ -109,6 +118,19 @@ class EventManagerTest extends TestCase
 		$this->eventManager->attach($event->getName(), function () { echo 'Event2'; }, 100);
 		$this->eventManager->trigger($event->getName());
 		$this->expectOutputString('Event1Event2Event3');
+	}
+
+	/**
+	 * @test
+	 */
+	public function triggerEventWithClassForAttach()
+	{
+		$this->container->method('get')->willReturn(new FooEvent());
+
+		$event = $this->makeEvent();
+		$this->eventManager->attach($event->getName(), FooEvent::class);
+		$this->eventManager->trigger($event->getName());
+		$this->expectOutputString('Event1');
 	}
 
 	/**

@@ -1,6 +1,7 @@
 <?php
 namespace App\Entity;
 
+use App\Traits\HasImage;
 use Core\Entity;
 use Core\Str;
 use SDAM\Traits\HasCreatedAt;
@@ -11,6 +12,7 @@ use SDAM\Traits\HasCreatedAt;
 class Category extends Entity
 {
 	use HasCreatedAt;
+	use HasImage;
 
   /**
    * @var integer
@@ -26,19 +28,6 @@ class Category extends Entity
    * @var string
    */
   public $slug;
-
-  /**
-   * @var string
-   */
-  public $image;
-
-  /**
-   * @return string
-   */
-  public function displayImage(): string
-  {
-    return $this->image ? '<img width="200" src="/uploads/' . $this->image .'" alt="Category image">' : '';
-  }
 
   /**
    * @param string|null $value

@@ -36,9 +36,11 @@ $container->set(\Doctrine\DBAL\Connection::class, function (\Psr\Container\Conta
 	return \Doctrine\DBAL\DriverManager::getConnection($container->get('config.db'));
 });
 
-$container->set(\Core\EventManager\EventManagerInterface::class, function () {
-	$eventManager = new \Core\EventManager\EventManager();
-	$eventManager->attach('entity.delete.image', new \App\EventListener\DeleteImageEventListener);
+$container->set(\Core\EventManager\EventManagerInterface::class, function (\Psr\Container\ContainerInterface $container) {
+	$eventManager = new \Core\EventManager\EventManager($container);
+	$eventManager
+		->attach('entity.delete.image', \App\EventListener\DeleteImageEventListener::class)
+		->attach('image.optimize'     , \App\EventListener\OptimizeImageListener::class);
 	return $eventManager;
 });
 

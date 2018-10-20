@@ -57,7 +57,10 @@
 		</div>
 		<div class="col-lg-9">
 			<ul>
-
+				<?php if ($session->has('user')):  ?>
+                    <li><a href="/user/destroy">Se déconnecter</a></li>
+                    <li><a href="#">Connecté en tant que <?= $session->get('user')['username'] ?></a></li>
+                <?php endif; ?>
 				<li><a href="#">Contact</a></li>
 				<li><a href="#">Catégories</a></li>
 				<li><a href="/">Accueil</a></li>

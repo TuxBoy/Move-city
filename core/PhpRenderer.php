@@ -17,6 +17,11 @@ class PhpRenderer
 	private $config;
 
 	/**
+	 * @var array
+	 */
+	private $globals = [];
+
+	/**
 	 * PhpRenderer constructor
 	 *
 	 * @param array $config
@@ -41,11 +46,22 @@ class PhpRenderer
 		ob_start();
 		/** @noinspection PhpUnusedLocalVariableInspection */
 		$renderer = $this;
+		extract($this->globals);
 		extract($data);
 		include $this->config['path'] . $view;
 		return ob_get_clean();
-		// TODO : Global layout
-		//include $this->config['path'] . 'layout.php';
+	}
+
+	/**
+	 * @param string $key
+	 * @param mixted $value
+	 * @return PhpRederer
+	 */
+	public function addGlobal(string $key, $value): self
+	{
+		$this->globals[$key] = $value;
+		
+		return $this;
 	}
 
 }

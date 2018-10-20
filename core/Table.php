@@ -75,7 +75,7 @@ abstract class Table
 	{
 		return $this->connection->createQueryBuilder()
 			->select('*')
-			->from(static::$table_name)
+      ->from(static::$table_name)
 			->orderBy('created_at', 'DESC')
 			->setMaxResults($limit)
 			->execute()
@@ -106,7 +106,7 @@ abstract class Table
    * Insert or update if id index exist
    *
    * @param array|Entity $data
-   * @return Statement|int
+   * @return Statement|int Last insert id
    * @throws ReflectionException|\Doctrine\DBAL\DBALException
    * @throws \PhpDocReader\AnnotationException|\Exception
    */
@@ -172,7 +172,7 @@ abstract class Table
    * @return string|object Hydrate entity
    * @throws \Exception
    */
-  private function hydrate(array $record, ?string $entity_name = null)
+  protected function hydrate(array $record, ?string $entity_name = null)
   {
     $entity = $entity_name ? new $entity_name : new static::$entity;
     foreach ($record as $property => $value) {

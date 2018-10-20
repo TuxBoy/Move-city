@@ -2,6 +2,7 @@
 namespace Core;
 
 use Doctrine\Common\Collections\Collection;
+use Exception;
 use SDAM\Annotation\Annotation;
 use SDAM\Annotation\AnnotationsName;
 
@@ -20,14 +21,24 @@ abstract class Entity
 
   /**
    * @param array $request
+   * @throws Exception
    */
   public function set(array $request = [])
   {
     foreach ($request as $property => $value) {
       if (property_exists(get_called_class(), $property)) {
         if (!$this->$property instanceof Collection) {
-          $this->$property = $value;
+          $setter = 'set' . ucfirst($property);
+          if (method_exists(get_called_class(), $setter)) {
+            $this->$setter($value);
+          }
+          else {
+            $this->$property = $value;          
+          }
         }
+      }
+      else {
+        throw new Exception(sprintf('The %s property does not exist', $property));
       }
     }
   }

@@ -137,31 +137,31 @@
 
 		</div>
 		<div class="row" id="range2">
+            <form action="/user/login" method="post">
+                <div class="col-lg-12">
+                    <div class="input-group">
+                        <div class="input-group-btn">
+                            <i class="btn btn-default"><span class="glyphicon glyphicon-user"></span></i>
+                        </div>
+                        <input type="text" class="form-control" name="username" placeholder="Ton pseudo ">
+                    </div>
+                    <div class="input-group">
+                        <div class="input-group-btn">
+                            <i class="btn btn-default"><span class="glyphicon glyphicon-user"></span></i>
+                        </div>
+                        <input type="password" class="form-control" name="password" placeholder="Le mot de passe">
+                    </div>
+                </div> <br> <br> <br>
 
-			<div class="col-lg-12">
-				<div class="input-group">
-					<div class="input-group-btn">
-						<i class="btn btn-default"><span class="glyphicon glyphicon-user"></span></i>
-					</div>
-					<input type="text" class="form-control" placeholder="Ton pseudo ">
-				</div>
-				<div class="input-group">
-					<div class="input-group-btn">
-						<i class="btn btn-default"><span class="glyphicon glyphicon-user"></span></i>
-					</div>
-					<input type="password" class="form-control" placeholder="Le mot de passe">
-				</div>
-			</div> <br> <br> <br>
-
-			<div class="row" id="range3">
-				<div class="col-lg-4 col-lg-offset-2">
-					<button type="submit" class="btn btn-success">Connexion</button>
-				</div>
-				<div class="col-lg-6">
-					<button type="submit" class="btn btn-default">Mot de passe oublié</button>
-				</div>
-
-			</div>
+                <div class="row" id="range3">
+                    <div class="col-lg-4 col-lg-offset-2">
+                        <button type="submit" class="btn btn-success">Connexion</button>
+                    </div>
+                    <div class="col-lg-6">
+                        <button type="submit" class="btn btn-default">Mot de passe oublié</button>
+                    </div>
+                </div>
+            </form>
 		</div>
 		<div id="range4">
 		</div>

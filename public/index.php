@@ -25,6 +25,11 @@ $loc = require $loc_file;
 $request = \Symfony\Component\HttpFoundation\Request::createFromGlobals();
 $response = new \Symfony\Component\HttpFoundation\Response();
 
+$request->setSession(new \Symfony\Component\HttpFoundation\Session\Session());
+if (!$request->getSession()->isStarted()) {
+  $request->getSession()->start();
+}
+
 // DI
 $container = new \Core\Container\DIC($request, $response);
 
@@ -42,6 +47,13 @@ $container->set(\Core\EventManager\EventManagerInterface::class, function (\Psr\
 		->attach('entity.delete.image', \App\EventListener\DeleteImageEventListener::class)
 		->attach('image.optimize'     , \App\EventListener\OptimizeImageListener::class);
 	return $eventManager;
+});
+
+$container->set(Core\PhpRenderer::class, function () use ($request) {
+	$renderer = new Core\PhpRenderer();
+	$renderer->addGlobal('session', $request->getSession());
+
+	return $renderer;
 });
 
 // Kernel and Middleware application

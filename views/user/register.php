@@ -14,7 +14,7 @@
                 <input type="password" name="password" class="form-control" placeholder="Mot de passe">
             </div>
             <div class="form-group">
-                <input type="password" name="confrm_password" class="form-control" placeholder="Confirmer votre mot de passe">
+                <input type="password" name="confirm_password" class="form-control" placeholder="Confirmer votre mot de passe">
             </div>
             <button type="submit" class="btn btn-primary">Enregister</button>
         </form>

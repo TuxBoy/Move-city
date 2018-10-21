@@ -38,14 +38,14 @@ class UserController
    * @return string
    * @throws \Doctrine\DBAL\DBALException
    * @throws \PhpDocReader\AnnotationException
-   * @throws \ReflectionException
+   * @throws \ReflectionException|\Exception
    */
     public function register(Request $request, PhpRenderer $renderer, UserTable $userTable): string
     {
         if ($request->getMethod() === 'POST') {
-            $user    = new User($request->request->all());
-            $user_id = $userTable->save($user);
-            $request->getSession()->set('user', ['user_id' => $user_id, 'username' => $user->username]);
+            $user = new User($request->request->all());
+            $userTable->save($user);
+            $request->getSession()->set('user', $user);
             return new RedirectResponse('/');
         }
         return $renderer->render('user.register');

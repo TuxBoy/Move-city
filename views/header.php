@@ -58,8 +58,11 @@
 		<div class="col-lg-9">
 			<ul>
 				<?php if ($session->has('user')):  ?>
+                    <?php if ($session->get('user')->isAdmin()):  ?>
+                        <li><a href="/dashboard">Admin</a></li>
+                    <?php endif; ?>
                     <li><a href="/user/destroy">Se déconnecter</a></li>
-                    <li><a href="#">Connecté en tant que <?= $session->get('user')['username'] ?></a></li>
+                    <li><a href="#">Connecté en tant que <?= $session->get('user')->username ?></a></li>
                 <?php endif; ?>
 				<li><a href="#">Contact</a></li>
 				<li><a href="#">Catégories</a></li>

@@ -226,6 +226,12 @@ abstract class Table
       elseif (!Annotation::of($class, $name)->hasAnnotation(AnnotationsName::P_LINK)) {
         $result[$name] = $property->getValue($entity);
       }
+      if (
+        isset($result[$name])
+        && Annotation::of($class, $name)->getAnnotation(AnnotationsName::P_STORE)->getValue() === "false"
+      ) {
+        unset($result[$name]);
+      }
     }
     return $result;
   }

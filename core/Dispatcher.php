@@ -1,6 +1,7 @@
 <?php
 namespace Core;
 
+use Psr\Container\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -22,7 +23,21 @@ class Dispatcher
 	 */
 	private $index = 0;
 
-	/**
+  /**
+   * @var ContainerInterface
+   */
+  private $container;
+
+  /**
+   * Dispatcher constructor.
+   * @param ContainerInterface $container
+   */
+  public function __construct(ContainerInterface $container)
+  {
+    $this->container = $container;
+  }
+
+  /**
 	 * @param Request  $request
 	 * @param Response $response
 	 * @return Response
@@ -40,11 +55,14 @@ class Dispatcher
 	/**
 	 * Add middleware class in the application
 	 *
-	 * @param callable $middleware
+	 * @param callable|string $middleware
 	 * @return Dispatcher
 	 */
-	public function addMiddleware(callable $middleware): self
+	public function addMiddleware($middleware): self
 	{
+	  if (is_string($middleware)) {
+	    $middleware = $this->container->get($middleware);
+    }
 		$this->middlewares[] = $middleware;
 
 		return $this;

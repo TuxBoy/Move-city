@@ -32,7 +32,7 @@ class AuthService
     $session = $this->request->getSession();
     if ($session->has('user')) {
       /** @var $user User */
-      $user = $this->userTable->get($session->get('user'));
+      $user = $this->userTable->get($session->get('user')->id);
       return $user;
     }
     return null;
@@ -48,7 +48,7 @@ class AuthService
   {
     $user = $this->userTable->findBy($username);
     if ($user->checkPassword($password)) {
-      $this->request->getSession()->set('user', ['user_id' => $user->id, 'username' => $user->username]);
+      $this->request->getSession()->set('user', $user);
       return true;
     }
     return false;

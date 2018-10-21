@@ -28,6 +28,12 @@ class User extends Entity
   public $password;
 
   /**
+   * @store false
+   * @var string
+   */
+  public $confirm_password;
+
+  /**
    * @var string
    */
   public $firstname;
@@ -36,6 +42,11 @@ class User extends Entity
    * @var string
    */
   public $lastname;
+
+  /**
+   * @var string
+   */
+  public $role = 'member';
 
   /**
    * @param $password string
@@ -48,13 +59,21 @@ class User extends Entity
     return $this;
   }
 
+/**
+ * @param string $password
+ * @return bool
+ */
+  public function checkPassword(string $password): bool
+  {
+    return $this->password === sha1($password);
+  }
+
   /**
-   * @param string $password
    * @return bool
    */
-    public function checkPassword(string $password): bool
-    {
-      return $this->password === sha1($password);
-    }
+  public function isAdmin(): bool
+  {
+    return $this->role === 'admin';
+  }
 
 }

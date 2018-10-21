@@ -58,7 +58,7 @@ $container->set(Core\PhpRenderer::class, function () use ($request) {
 
 // Kernel and Middleware application
 $kernel     = new \Core\Kernel($container);
-$dispatcher = new \Core\Dispatcher;
+$dispatcher = new \Core\Dispatcher($container);
 $dispatcher
 	->addMiddleware(
 			new MaintainerMiddleware(
@@ -67,6 +67,7 @@ $dispatcher
 					Config::DATABASE => $container->get('config.db')
 				]
 		))
+  ->addMiddleware(\App\Middleware\AdminMiddleware::class)
 	->addMiddleware([$kernel, 'handler']);
 $response = $dispatcher->process($request, $response);
 

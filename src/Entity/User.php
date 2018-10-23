@@ -10,7 +10,7 @@ class User extends Entity
    * @var integer
    */
   public $id;
-    
+
   /**
    * @length 60
    * @var string
@@ -34,11 +34,13 @@ class User extends Entity
   public $confirm_password;
 
   /**
+	 * @null
    * @var string
    */
   public $firstname;
 
   /**
+	 * @null
    * @var string
    */
   public $lastname;

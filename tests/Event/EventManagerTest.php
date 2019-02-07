@@ -1,5 +1,5 @@
 <?php
-namespace Test;
+namespace Test\Event;
 
 use Core\EventManager\EventInterface;
 use Core\EventManager\EventManager;

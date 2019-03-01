@@ -762,7 +762,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_axios__ = __webpack_require__(9);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_axios___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_axios__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__map_Marker__ = __webpack_require__(29);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__map_Map__ = __webpack_require__(30);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__CollectionDom__ = __webpack_require__(36);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__map_Map__ = __webpack_require__(30);
+
 
 
 
@@ -776,10 +778,16 @@ var map = document.querySelector('#macarte');
 if (map) {
 	__WEBPACK_IMPORTED_MODULE_0_axios___default.a.get('/shop/api').then(function (response) {
 		var shops = response.data;
-		new __WEBPACK_IMPORTED_MODULE_2__map_Map__["a" /* default */](L, 'macarte').createMap(map_params.lat, map_params.lng, map_params.zoom, shops);
+		new __WEBPACK_IMPORTED_MODULE_3__map_Map__["a" /* default */](L, 'macarte').createMap(map_params.lat, map_params.lng, map_params.zoom, shops);
 	}).catch(function (error) {
 		return console.log(error);
 	});
+}
+
+var add_collection_button = document.querySelector('#add_collection');
+if (add_collection_button) {
+	var collection = new __WEBPACK_IMPORTED_MODULE_2__CollectionDom__["a" /* default */]();
+	collection.addItem(add_collection_button);
 }
 
 /***/ }),
@@ -1992,6 +2000,56 @@ var Map = function () {
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 32 */,
+/* 33 */,
+/* 34 */,
+/* 35 */,
+/* 36 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var CollectionDom = function () {
+	function CollectionDom() {
+		_classCallCheck(this, CollectionDom);
+
+		this.count = document.querySelectorAll('.times').length;
+	}
+
+	_createClass(CollectionDom, [{
+		key: 'addItem',
+		value: function addItem(add_collection_button) {
+			var _this = this;
+
+			add_collection_button.addEventListener('click', function (event) {
+				event.preventDefault();
+				var timesElement = document.querySelector('.times');
+				_this.cloneContainer = timesElement.cloneNode(true);
+				_this.setNameAttribute('select', 'day');
+				_this.setNameAttribute('input', 'start_hours');
+				_this.setNameAttribute('input', 'end_hours');
+				var container = document.querySelector('.collection');
+				container.append(_this.cloneContainer);
+				_this.count++;
+			});
+		}
+	}, {
+		key: 'setNameAttribute',
+		value: function setNameAttribute(elementName, property) {
+			var selectDay = this.cloneContainer.querySelector('.times > ' + elementName);
+			selectDay.setAttribute('name', 'times[' + this.count + '][' + property + ']');
+		}
+	}]);
+
+	return CollectionDom;
+}();
+
+/* harmony default export */ __webpack_exports__["a"] = (CollectionDom);
 
 /***/ })
 /******/ ]);

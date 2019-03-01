@@ -70,10 +70,17 @@ class Shop extends Entity
    */
 	public $categories;
 
+	/**
+	 * @link belongsToMany
+	 * @var Time[]
+	 */
+	public $times;
+
 	public function __construct(array $request = [])
 	{
 		parent::__construct($request);
 		$this->categories = new ArrayCollection();
+		$this->times      = new ArrayCollection();
 	}
 
 	/**
@@ -149,5 +156,22 @@ class Shop extends Entity
     });
     return $exists ? 'selected' : '';
   }
+
+	public function getTimes(): Collection
+	{
+		return $this->times;
+	}
+
+	/**
+	 * @param $times Time[]
+	 */
+	public function addTime(Time ...$times): void
+	{
+		foreach ($times as $time) {
+			if (!$this->times->contains($time)) {
+				$this->times->add($time);
+			}
+		}
+	}
 
 }

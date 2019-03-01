@@ -36,7 +36,7 @@ abstract class Entity
             $this->{$setter}($value);
           }
           else {
-            $this->$property = $value;          
+            $this->$property = $value;
           }
         }
       }
